@@ -32,4 +32,20 @@ describe("ApiClient", () => {
 
     await expect(apiClient.fetchState()).rejects.toThrow();
   });
+
+  it("should fetch mappings correctly", async () => {
+    const mockResponse = {
+      odds: "d1:value1;id2:value2",
+    };
+
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue(mockResponse),
+    });
+
+    const response = await apiClient.fetchMapping();
+
+    expect(response).toEqual(mockResponse);
+    expect(fetch).toHaveBeenCalledWith(`${baseUrl}/mappings`);
+  });
 });
