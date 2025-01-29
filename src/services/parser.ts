@@ -8,7 +8,13 @@ export type SportEventOdd = {
   homeCompetitorId: string;
   awayCompetitorId: string;
   status: string;
-  scores: string;
+  scores: SportEventScore[];
+};
+
+export type SportEventScore = {
+  periodId: string;
+  homeScore: string;
+  awayScore: string;
 };
 
 export const parseMappings = (rawMappings: string): MappingDictionary => {
@@ -20,6 +26,15 @@ export const parseMappings = (rawMappings: string): MappingDictionary => {
 export const parseOdds = (rawOdds: string): SportEventOdd[] => {
   const odds = rawOdds.split("\n").map((odd) => {
     const [id, sportId, competitionId, startTime, homeCompetitorId, awayCompetitorId, status, scores] = odd.split(",");
+    const scoresArray = scores.split("|").map((score) => {
+      const [periodId, periodScores] = score.split("@");
+      const [homeScore, awayScore] = periodScores.split(":");
+      return {
+        periodId,
+        homeScore,
+        awayScore,
+      };
+    });
     return {
       id,
       sportId,
@@ -28,7 +43,7 @@ export const parseOdds = (rawOdds: string): SportEventOdd[] => {
       homeCompetitorId,
       awayCompetitorId,
       status,
-      scores,
+      scores: scoresArray,
     };
   });
   return odds;

@@ -25,7 +25,7 @@ describe("Parser", () => {
       "sportEventId1,sportId1,cometitionId1,1709900432183,homeTeamId1,awayTeamId1,statusId1,periodId1@1:1|periodId2@1:2";
 
     const odd2 =
-      "sportEventId2,sportId2,cometitionId2,1709900432180,homeTeamId2,awayTeamId2,statusId2,periodId2@0:0|periodId2@0:2";
+      "sportEventId2,sportId2,cometitionId2,1709900432180,homeTeamId2,awayTeamId2,statusId2,periodId2@0:0";
 
     const odds = `${odd1}\n${odd2}`;
 
@@ -38,7 +38,18 @@ describe("Parser", () => {
         homeCompetitorId: "homeTeamId1",
         awayCompetitorId: "awayTeamId1",
         status: "statusId1",
-        scores: "periodId1@1:1|periodId2@1:2",
+        scores: [
+          {
+            periodId: "periodId1",
+            homeScore: "1",
+            awayScore: "1",
+          },
+          {
+            periodId: "periodId2",
+            homeScore: "1",
+            awayScore: "2",
+          },
+        ],
       },
       {
         id: "sportEventId2",
@@ -48,7 +59,13 @@ describe("Parser", () => {
         homeCompetitorId: "homeTeamId2",
         awayCompetitorId: "awayTeamId2",
         status: "statusId2",
-        scores: "periodId2@0:0|periodId2@0:2",
+        scores: [
+          {
+            periodId: "periodId2",
+            homeScore: "0",
+            awayScore: "0",
+          },
+        ],
       },
     ];
     const parsedOdds = parseOdds(odds);
