@@ -24,13 +24,8 @@ export type SportEvent = {
   competitors: Record<CompetitorType, { type: CompetitorType; name: string }>;
 };
 
-export const mapSportEvents = (odds: SportEventOdd[], mappings: MappingDictionary): SportEvents => {
-  const sportEvents: SportEvents = {};
-  for (const odd of odds) {
-    sportEvents[odd.id] = mapSportEvent(odd, mappings);
-  }
-  return sportEvents;
-};
+export const mapSportEvents = (odds: SportEventOdd[], mappings: MappingDictionary) =>
+  Object.fromEntries(odds.map((odd) => [odd.id, mapSportEvent(odd, mappings)]));
 
 const mapSportEvent = (odd: SportEventOdd, mappings: MappingDictionary): SportEvent => {
   const scores = mapScores(odd.scores);
