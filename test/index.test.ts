@@ -4,12 +4,6 @@ import { updateState } from "../src/services/stateManager";
 import { MappingDictionary, SportEventOdd } from "../src/services/parser";
 import { SportEvents } from "../src/services/mapper";
 
-describe("index", () => {
-  it("should run test", () => {
-    expect(true).toBe(true);
-  });
-});
-
 describe("Server tests", () => {
   beforeEach(async () => {
     await init();
