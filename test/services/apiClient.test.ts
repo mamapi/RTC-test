@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import ApiClient from "../../src/services/apiClient";
+import ApiClient, { StateResponse, MappingsResponse } from "../../src/services/apiClient";
 
 describe("ApiClient", () => {
   const baseUrl = "https://simulation.api.example.com";
@@ -11,7 +11,7 @@ describe("ApiClient", () => {
 
   describe("fetchState", () => {
     it("should fetch state correctly", async () => {
-      const mockResponse = {
+      const mockResponse: StateResponse = {
         odds: "1,2,3",
       };
 
@@ -37,7 +37,7 @@ describe("ApiClient", () => {
 
   describe("fetchMappings", () => {
     it("should fetch mappings correctly", async () => {
-      const mockResponse = {
+      const mockResponse: MappingsResponse = {
         mappings: "d1:value1;id2:value2",
       };
 
