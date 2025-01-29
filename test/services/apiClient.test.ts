@@ -9,51 +9,55 @@ describe("ApiClient", () => {
     expect(apiClient).toBeInstanceOf(ApiClient);
   });
 
-  it("should fetch state correctly", async () => {
-    const mockResponse = {
-      odds: "1,2,3",
-    };
+  describe("fetchState", () => {
+    it("should fetch state correctly", async () => {
+      const mockResponse = {
+        odds: "1,2,3",
+      };
 
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: vi.fn().mockResolvedValue(mockResponse),
+      globalThis.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: vi.fn().mockResolvedValue(mockResponse),
+      });
+
+      const response = await apiClient.fetchState();
+
+      expect(response).toEqual(mockResponse);
+      expect(fetch).toHaveBeenCalledWith(`${baseUrl}/state`);
     });
 
-    const response = await apiClient.fetchState();
+    it("should throw an error if the response is not ok", async () => {
+      globalThis.fetch = vi.fn().mockResolvedValue({
+        ok: false,
+      });
 
-    expect(response).toEqual(mockResponse);
-    expect(fetch).toHaveBeenCalledWith(`${baseUrl}/state`);
+      await expect(apiClient.fetchState()).rejects.toThrow();
+    });
   });
 
-  it("should throw an error if the response is not ok", async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: false,
+  describe("fetchMappings", () => {
+    it("should fetch mappings correctly", async () => {
+      const mockResponse = {
+        odds: "d1:value1;id2:value2",
+      };
+
+      globalThis.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: vi.fn().mockResolvedValue(mockResponse),
+      });
+
+      const response = await apiClient.fetchMappings();
+
+      expect(response).toEqual(mockResponse);
+      expect(fetch).toHaveBeenCalledWith(`${baseUrl}/mappings`);
     });
 
-    await expect(apiClient.fetchState()).rejects.toThrow();
-  });
+    it("should throw an error if the response is not ok", async () => {
+      globalThis.fetch = vi.fn().mockResolvedValue({
+        ok: false,
+      });
 
-  it("should fetch mappings correctly", async () => {
-    const mockResponse = {
-      odds: "d1:value1;id2:value2",
-    };
-
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: vi.fn().mockResolvedValue(mockResponse),
+      await expect(apiClient.fetchMappings()).rejects.toThrow();
     });
-
-    const response = await apiClient.fetchMappings();
-
-    expect(response).toEqual(mockResponse);
-    expect(fetch).toHaveBeenCalledWith(`${baseUrl}/mappings`);
-  });
-
-  it("should throw an error if the response is not ok", async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: false,
-    });
-
-    await expect(apiClient.fetchMappings()).rejects.toThrow();
   });
 });
