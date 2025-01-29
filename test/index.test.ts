@@ -31,4 +31,13 @@ describe("Server tests", () => {
     expect(newServer.settings.port).toBe(4001);
     delete process.env.PORT;
   });
+
+  it("should return 404 when accessing a non-existent route", async () => {
+    const res = await server.inject({
+      method: "GET",
+      url: "/non-existent-route",
+    });
+
+    expect(res.statusCode).toBe(404);
+  });
 });
