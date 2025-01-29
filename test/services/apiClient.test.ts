@@ -24,4 +24,12 @@ describe("ApiClient", () => {
     expect(response).toEqual(mockResponse);
     expect(fetch).toHaveBeenCalledWith(`${baseUrl}/state`);
   });
+
+  it("should throw an error if the response is not ok", async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: false,
+    });
+
+    await expect(apiClient.fetchState()).rejects.toThrow();
+  });
 });
