@@ -38,7 +38,7 @@ describe("ApiClient", () => {
   describe("fetchMappings", () => {
     it("should fetch mappings correctly", async () => {
       const mockResponse = {
-        odds: "d1:value1;id2:value2",
+        mappings: "d1:value1;id2:value2",
       };
 
       globalThis.fetch = vi.fn().mockResolvedValue({
