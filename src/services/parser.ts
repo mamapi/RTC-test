@@ -18,9 +18,7 @@ export type SportEventScore = {
 };
 
 export const parseMappings = (rawMappings: string): MappingDictionary => {
-  return Object.fromEntries(
-    rawMappings.split(";").map((entry) => entry.split(":"))
-  );
+  return Object.fromEntries(rawMappings.split(";").map((entry) => entry.split(":")));
 };
 
 export const parseOdds = (rawOdds: string): SportEventOdd[] => {

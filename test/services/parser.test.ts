@@ -1,15 +1,9 @@
 import { describe, expect, it } from "vitest";
-import {
-  MappingDictionary,
-  SportEventOdd,
-  parseMappings,
-  parseOdds,
-} from "../../src/services/parser";
+import { MappingDictionary, SportEventOdd, parseMappings, parseOdds } from "../../src/services/parser";
 
 describe("Parser", () => {
   it("should parse the mappings correctly", () => {
-    const rawMappings =
-      "id1:Real Madrid;id2:Barcelona;id3:Atletico Madrid;id4:Liverpool";
+    const rawMappings = "id1:Real Madrid;id2:Barcelona;id3:Atletico Madrid;id4:Liverpool";
     const expectedMappings: MappingDictionary = {
       id1: "Real Madrid",
       id2: "Barcelona",
@@ -24,8 +18,7 @@ describe("Parser", () => {
     const odd1 =
       "sportEventId1,sportId1,cometitionId1,1709900432183,homeTeamId1,awayTeamId1,statusId1,periodId1@1:1|periodId2@1:2";
 
-    const odd2 =
-      "sportEventId2,sportId2,cometitionId2,1709900432180,homeTeamId2,awayTeamId2,statusId2,periodId2@0:0";
+    const odd2 = "sportEventId2,sportId2,cometitionId2,1709900432180,homeTeamId2,awayTeamId2,statusId2,periodId2@0:0";
 
     const odds = `${odd1}\n${odd2}`;
 
