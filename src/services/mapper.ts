@@ -6,12 +6,18 @@ export type SportEvents = Record<string, SportEvent>;
 
 export type PeriodId = "CURRENT" | `PERIOD_${number}`;
 
+export type PeriodScore = {
+  type: PeriodId;
+  home: string;
+  away: string;
+};
+
 export type CompetitorType = "HOME" | "AWAY";
 
 export type SportEvent = {
   id: string;
   status: SportEventStatus;
-  scores: Record<PeriodId, { type: PeriodId; home: string; away: string }>;
+  scores: Record<PeriodId, PeriodScore>;
   startTime: string;
   sport: string;
   competition: string;
@@ -42,12 +48,10 @@ const mapSportEvent = (odd: SportEventOdd, mappings: MappingDictionary): SportEv
   return sportEvent;
 };
 
-const mapScores = (scores: SportEventScore[]): Record<PeriodId, { type: PeriodId; home: string; away: string }> => {
-  return scores.reduce((acc, score) => {
-    acc[score.periodId] = { type: score.periodId, home: score.homeScore, away: score.awayScore };
-    return acc;
-  }, {} as Record<PeriodId, { type: PeriodId; home: string; away: string }>);
-};
+const mapScores = (scores: SportEventScore[]) =>
+  Object.fromEntries(
+    scores.map((score) => [score.periodId, { type: score.periodId, home: score.homeScore, away: score.awayScore }])
+  ) as Record<PeriodId, PeriodScore>;
 
 const mapCompetitors = (
   homeCompetitorId: string,
