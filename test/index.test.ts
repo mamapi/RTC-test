@@ -40,4 +40,14 @@ describe("Server tests", () => {
 
     expect(res.statusCode).toBe(404);
   });
+
+  it("should return empty state initially", async () => {
+    const res = await server.inject({
+      method: "GET",
+      url: "/client/state",
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.result).toEqual({});
+  });
 });
