@@ -48,4 +48,12 @@ describe("ApiClient", () => {
     expect(response).toEqual(mockResponse);
     expect(fetch).toHaveBeenCalledWith(`${baseUrl}/mappings`);
   });
+
+  it("should throw an error if the response is not ok", async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: false,
+    });
+
+    await expect(apiClient.fetchMappings()).rejects.toThrow();
+  });
 });
