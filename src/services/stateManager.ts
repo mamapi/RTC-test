@@ -5,7 +5,11 @@ let internalState: Record<string, SportEvent> = {};
 
 export const updateState = (odds: SportEventOdd[], mappings: MappingDictionary) => {
   const sportEvents = mapSportEvents(odds, mappings);
-  internalState = sportEvents;
+  for (const [key, value] of Object.entries(sportEvents)) {
+    internalState[key] = value;
+  }
 };
 
-export const getState = () => internalState;
+export const geAllEvents = () => internalState;
+
+export const getActiveEvents = () => internalState;
