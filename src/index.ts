@@ -1,5 +1,5 @@
 import Hapi from "@hapi/hapi";
-import { getActiveEvents } from "./services/stateManager";
+import clientRoutes from "./routes/client";
 
 export let server: Hapi.Server;
 
@@ -9,13 +9,7 @@ export const init = async (): Promise<Hapi.Server> => {
     host: "localhost",
   });
 
-  server.route({
-    method: "GET",
-    path: "/client/state",
-    handler: (_request, h) => {
-      return h.response(getActiveEvents()).code(200);
-    },
-  });
+  server.route(clientRoutes);
 
   return server;
 };
