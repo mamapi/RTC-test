@@ -18,5 +18,18 @@ export const parseMappings = (rawMappings: string): MappingDictionary => {
 };
 
 export const parseOdds = (rawOdds: string): SportEventOdd[] => {
-  return [];
+  const odds = rawOdds.split("\n").map((odd) => {
+    const [id, sportId, competitionId, startTime, homeCompetitorId, awayCompetitorId, status, scores] = odd.split(",");
+    return {
+      id,
+      sportId,
+      competitionId,
+      startTime,
+      homeCompetitorId,
+      awayCompetitorId,
+      status,
+      scores,
+    };
+  });
+  return odds;
 };
