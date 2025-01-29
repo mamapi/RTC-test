@@ -43,7 +43,7 @@ describe("ApiClient", () => {
       json: vi.fn().mockResolvedValue(mockResponse),
     });
 
-    const response = await apiClient.fetchMapping();
+    const response = await apiClient.fetchMappings();
 
     expect(response).toEqual(mockResponse);
     expect(fetch).toHaveBeenCalledWith(`${baseUrl}/mappings`);
