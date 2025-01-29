@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import ApiClient from "../../src/services/apiClient";
 
 describe("ApiClient", () => {
   it("should be an instance of ApiClient", () => {
