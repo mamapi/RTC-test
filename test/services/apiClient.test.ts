@@ -22,5 +22,6 @@ describe("ApiClient", () => {
     const response = await apiClient.fetchState();
 
     expect(response).toEqual(mockResponse);
+    expect(fetch).toHaveBeenCalledWith(`${baseUrl}/state`);
   });
 });
