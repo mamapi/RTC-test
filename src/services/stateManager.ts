@@ -5,15 +5,17 @@ let internalState: Record<string, SportEvent> = {};
 
 export const updateState = (odds: SportEventOdd[], mappings: MappingDictionary) => {
   const sportEvents = mapSportEvents(odds, mappings);
-  for (const [key, value] of Object.entries(sportEvents)) {
-    internalState[key] = value;
-  }
 
-  for (const key in internalState) {
-    if (!Object.keys(sportEvents).some((id) => id === key)) {
+  // Update and add new events
+  Object.assign(internalState, sportEvents);
+
+  // Mark removed events
+  const newEventIds = new Set(Object.keys(sportEvents));
+  Object.keys(internalState)
+    .filter((key) => !newEventIds.has(key))
+    .forEach((key) => {
       internalState[key].status = "REMOVED";
-    }
-  }
+    });
 };
 
 export const geAllEvents = () => internalState;
