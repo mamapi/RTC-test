@@ -5,8 +5,8 @@ let internalState: Record<string, SportEvent> = {};
 let currentMappingsHash: string = "";
 
 export const updateState = (odds: SportEventOdd[], mappings: MappingDictionary) => {
-  const newMappingsHash = JSON.stringify(mappings);
-  if (newMappingsHash !== currentMappingsHash) {
+  const [mappingsChanged, newMappingsHash] = hashMappingsChanged(mappings);
+  if (mappingsChanged) {
     clearState();
     currentMappingsHash = newMappingsHash;
   }
@@ -33,3 +33,8 @@ export const geAllEvents = () => internalState;
 
 export const getActiveEvents = () =>
   Object.fromEntries(Object.entries(internalState).filter(([_, event]) => event.status !== "REMOVED"));
+
+const hashMappingsChanged = (mappings: MappingDictionary): [boolean, string] => {
+  const newHash = JSON.stringify(mappings);
+  return [newHash !== currentMappingsHash, newHash];
+};
