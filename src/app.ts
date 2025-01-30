@@ -2,21 +2,20 @@ import Hapi from "@hapi/hapi";
 import clientRoutes from "./routes/client";
 import ApiClient from "./services/apiClient";
 import SimulationPooler from "./services/simulationPooler";
+import { ServerConfig, getConfig } from "./config";
 
 export let server: Hapi.Server;
 
-const SIMULATION_API_URL = `http://localhost:3000/api`;
-
-export const init = async (): Promise<Hapi.Server> => {
+export const init = async (config: ServerConfig = getConfig()): Promise<Hapi.Server> => {
   server = Hapi.server({
-    port: Number(process.env.PORT) || 4000,
+    port: config.apiPort,
     host: "localhost",
   });
 
   server.route(clientRoutes);
 
-  const apiClient = new ApiClient(SIMULATION_API_URL);
-  const pooler = new SimulationPooler(apiClient, Number(process.env.POOLER_INTERVAL_MS) || 1000);
+  const apiClient = new ApiClient(config.simulationApiUrl);
+  const pooler = new SimulationPooler(apiClient, config.poolerIntervalMs);
   pooler.start();
 
   return server;
