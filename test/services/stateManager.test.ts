@@ -13,6 +13,9 @@ const mappings1: MappingDictionary = {
   away2: "Atletico Madrid",
   status0: "PRE",
   status1: "LIVE",
+  period0: "CURRENT",
+  period1: "PERIOD_1",
+  period2: "PERIOD_2",
 };
 
 const mappings2: MappingDictionary = {
@@ -24,6 +27,9 @@ const mappings2: MappingDictionary = {
   away1: "Warriors",
   status0: "PRE",
   status1: "LIVE",
+  period0: "CURRENT",
+  period1: "PERIOD_1",
+  period2: "PERIOD_2",
 };
 
 const event1Data = {
@@ -40,7 +46,7 @@ const event1Update1: SportEventOdd = {
   ...event1Data,
   scores: [
     {
-      periodId: "CURRENT",
+      periodId: "period0",
       homeScore: "1",
       awayScore: "2",
     },
@@ -51,7 +57,7 @@ const event1Update2: SportEventOdd = {
   ...event1Data,
   scores: [
     {
-      periodId: "CURRENT",
+      periodId: "period0",
       homeScore: "3",
       awayScore: "4",
     },
@@ -72,7 +78,7 @@ const event2Update1: SportEventOdd = {
   ...event2Data,
   scores: [
     {
-      periodId: "CURRENT",
+      periodId: "period0",
       homeScore: "3",
       awayScore: "4",
     },
