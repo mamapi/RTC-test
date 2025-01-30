@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { MappingDictionary, SportEventOdd } from "../../src/services/parser";
-import { updateState, geAllEvents, getActiveEvents } from "../../src/services/stateManager";
+import { updateState, geAllEvents, getActiveEvents, clearState } from "../../src/services/stateManager";
 
 const mappings: MappingDictionary = {
   event1: "event1",
@@ -69,6 +69,10 @@ const event2Update1: SportEventOdd = {
 };
 
 describe("StateManager", () => {
+  beforeEach(() => {
+    clearState();
+  });
+
   it("should update the state correctly", () => {
     updateState([event1Update1], mappings);
 
