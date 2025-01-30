@@ -1,5 +1,5 @@
 import ApiClient from "./apiClient";
-import { parseMappings, parseOdds } from "./parser";
+import { parseMappings, parseEvents } from "./parser";
 import { updateState } from "./stateManager";
 
 class SimulationPooler {
@@ -18,8 +18,8 @@ class SimulationPooler {
         this.apiClient.fetchMappings(),
       ]);
       const mappings = parseMappings(mappingsResponse.mappings);
-      const odds = parseOdds(stateResponse.odds);
-      updateState(odds, mappings);
+      const events = parseEvents(stateResponse.odds);
+      updateState(events, mappings);
     } catch (error) {
       console.error("Error in simulation pooler", error);
     }

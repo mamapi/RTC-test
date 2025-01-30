@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { RawModel } from "../../src/models";
-import { parseMappings, parseOdds } from "../../src/services/parser";
+import { parseMappings, parseEvents } from "../../src/services/parser";
 
 describe("Parser", () => {
   it("should parse the mappings correctly", () => {
@@ -16,14 +16,14 @@ describe("Parser", () => {
   });
 
   it("should parse the odds correctly", () => {
-    const odd1 =
+    const event1 =
       "sportEventId1,sportId1,cometitionId1,1709900432183,homeTeamId1,awayTeamId1,statusId1,periodId1@1:1|periodId2@1:2";
 
-    const odd2 = "sportEventId2,sportId2,cometitionId2,1709900432180,homeTeamId2,awayTeamId2,statusId2,periodId2@0:0";
+    const event2 = "sportEventId2,sportId2,cometitionId2,1709900432180,homeTeamId2,awayTeamId2,statusId2,periodId2@0:0";
 
-    const odds = `${odd1}\n${odd2}`;
+    const events = `${event1}\n${event2}`;
 
-    const expectedOdds: RawModel.SportEvent[] = [
+    const expectedEvents: RawModel.SportEvent[] = [
       {
         id: "sportEventId1",
         sportId: "sportId1",
@@ -62,13 +62,13 @@ describe("Parser", () => {
         ],
       },
     ];
-    const parsedOdds = parseOdds(odds);
-    expect(parsedOdds).toEqual(expectedOdds);
+    const parsedEvents = parseEvents(events);
+    expect(parsedEvents).toEqual(expectedEvents);
   });
 
   it("should not fail if there are no scores", () => {
-    const odd = "sportEventId1,sportId1,cometitionId1,1709900432183,homeTeamId1,awayTeamId1,statusId1";
-    const expectedOdds: RawModel.SportEvent[] = [
+    const event = "sportEventId1,sportId1,cometitionId1,1709900432183,homeTeamId1,awayTeamId1,statusId1";
+    const expectedEvents: RawModel.SportEvent[] = [
       {
         id: "sportEventId1",
         sportId: "sportId1",
@@ -80,7 +80,7 @@ describe("Parser", () => {
         scores: [],
       },
     ];
-    const parsedOdds = parseOdds(odd);
-    expect(parsedOdds).toEqual(expectedOdds);
+    const parsedEvents = parseEvents(event);
+    expect(parsedEvents).toEqual(expectedEvents);
   });
 });

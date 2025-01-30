@@ -4,14 +4,14 @@ import { mapSportEvents } from "./mapper";
 let internalState: Record<string, SportEventModel.SportEvent> = {};
 let currentMappingsHash: string = "";
 
-export const updateState = (odds: RawModel.SportEvent[], mappings: RawModel.MappingDict) => {
+export const updateState = (events: RawModel.SportEvent[], mappings: RawModel.MappingDict) => {
   const [mappingsChanged, newMappingsHash] = hashMappingsChanged(mappings);
   if (mappingsChanged) {
     clearState();
     currentMappingsHash = newMappingsHash;
   }
 
-  const sportEvents = mapSportEvents(odds, mappings);
+  const sportEvents = mapSportEvents(events, mappings);
   updateEvents(sportEvents);
   markRemovedEvents(sportEvents);
 };

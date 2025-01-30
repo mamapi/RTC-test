@@ -49,7 +49,7 @@ describe("Server tests", () => {
   });
 
   it("should return state after updating", async () => {
-    const odds: RawModel.SportEvent[] = [
+    const events: RawModel.SportEvent[] = [
       {
         id: "event1",
         sportId: "sport1",
@@ -72,7 +72,7 @@ describe("Server tests", () => {
       period1: "PERIOD_1",
     };
 
-    updateState(odds, mappings);
+    updateState(events, mappings);
     const res = await server.inject({
       method: "GET",
       url: "/client/state",

@@ -4,9 +4,9 @@ export const parseMappings = (rawMappings: string): MappingDict => {
   return Object.fromEntries(rawMappings.split(";").map((entry) => entry.split(":")));
 };
 
-export const parseOdds = (rawOdds: string): SportEvent[] => {
-  const odds = rawOdds.split("\n").map((odd) => {
-    const [id, sportId, competitionId, startTime, homeCompetitorId, awayCompetitorId, status, scores] = odd.split(",");
+export const parseEvents = (rawEvents: string): SportEvent[] => {
+  const events = rawEvents.split("\n").map((event) => {
+    const [id, sportId, competitionId, startTime, homeCompetitorId, awayCompetitorId, status, scores] = event.split(",");
     return {
       id,
       sportId,
@@ -18,7 +18,7 @@ export const parseOdds = (rawOdds: string): SportEvent[] => {
       scores: parseScores(scores),
     };
   });
-  return odds;
+  return events;
 };
 
 const parseScores = (scores?: string): PeriodScore[] => {

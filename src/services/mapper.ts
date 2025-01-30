@@ -1,20 +1,20 @@
 import { RawModel, SportEventModel } from "../models";
 import { formatDate } from "../utils/dateUtils";
 
-export const mapSportEvents = (odds: RawModel.SportEvent[], mappings: RawModel.MappingDict) =>
-  Object.fromEntries(odds.map((odd) => [odd.id, mapSportEvent(odd, mappings)]));
+export const mapSportEvents = (events: RawModel.SportEvent[], mappings: RawModel.MappingDict) =>
+  Object.fromEntries(events.map((event) => [event.id, mapSportEvent(event, mappings)]));
 
-const mapSportEvent = (odd: RawModel.SportEvent, mappings: RawModel.MappingDict): SportEventModel.SportEvent => {
-  const scores = mapScores(odd.scores, mappings);
-  const competitors = mapCompetitors(odd.homeCompetitorId, odd.awayCompetitorId, mappings);
-  const startTime = formatDate(odd.startTime);
+const mapSportEvent = (event: RawModel.SportEvent, mappings: RawModel.MappingDict): SportEventModel.SportEvent => {
+  const scores = mapScores(event.scores, mappings);
+  const competitors = mapCompetitors(event.homeCompetitorId, event.awayCompetitorId, mappings);
+  const startTime = formatDate(event.startTime);
   const sportEvent: SportEventModel.SportEvent = {
-    id: odd.id,
-    status: mappings[odd.status] as SportEventModel.EventStatus,
+    id: event.id,
+    status: mappings[event.status] as SportEventModel.EventStatus,
     scores,
     startTime,
-    sport: mappings[odd.sportId],
-    competition: mappings[odd.competitionId],
+    sport: mappings[event.sportId],
+    competition: mappings[event.competitionId],
     competitors,
   };
 
