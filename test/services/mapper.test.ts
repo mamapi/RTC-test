@@ -15,12 +15,12 @@ describe("Mapper", () => {
         status: "status1",
         scores: [
           {
-            periodId: "PERIOD_1",
+            periodId: "period1",
             homeScore: "1",
             awayScore: "2",
           },
           {
-            periodId: "CURRENT",
+            periodId: "period0",
             homeScore: "3",
             awayScore: "4",
           },
@@ -33,6 +33,8 @@ describe("Mapper", () => {
       status1: "LIVE",
       sport1: "FOOTBALL",
       competition1: "La Liga",
+      period0: "CURRENT",
+      period1: "PERIOD_1",
     };
 
     const sportEvents = mapSportEvents(odds, mappings);
