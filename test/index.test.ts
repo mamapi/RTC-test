@@ -1,8 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { server, init } from "../src";
 import { updateState } from "../src/services/stateManager";
-import { RawModel } from "../src/models";
-import { SportEvents } from "../src/services/mapper";
+import { RawModel, SportEventModel } from "../src/models";
 
 describe("Server tests", () => {
   beforeEach(async () => {
@@ -79,7 +78,7 @@ describe("Server tests", () => {
     });
 
     expect(res.statusCode).toBe(200);
-    expect(res.result).toEqual<SportEvents>({
+    expect(res.result).toEqual<SportEventModel.EventDict>({
       event1: {
         id: "event1",
         sport: "FOOTBALL",
