@@ -125,4 +125,12 @@ describe("StateManager", () => {
     expect(Object.keys(geAllEvents())).toEqual(["event1", "event2"]);
     expect(geAllEvents().event1.status).toEqual("REMOVED");
   });
+
+  it("should clear all events when clearState is called", () => {
+    updateState([event1Update1], mappings);
+    expect(Object.keys(geAllEvents())).toEqual(["event1"]);
+
+    clearState();
+    expect(Object.keys(geAllEvents())).toEqual([]);
+  });
 });

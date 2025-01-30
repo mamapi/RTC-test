@@ -18,6 +18,9 @@ export const updateState = (odds: SportEventOdd[], mappings: MappingDictionary) 
     });
 };
 
+export const clearState = () => {
+};
+
 export const geAllEvents = () => internalState;
 
 export const getActiveEvents = () =>
