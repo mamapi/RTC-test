@@ -47,7 +47,7 @@ describe("Mapper", () => {
           CURRENT: { type: "CURRENT", home: "3", away: "4" },
           PERIOD_1: { type: "PERIOD_1", home: "1", away: "2" },
         },
-        startTime: "1709900432183",
+        startTime: "2024-03-08T12:20:32.183Z",
         sport: "FOOTBALL",
         competition: "La Liga",
         competitors: {

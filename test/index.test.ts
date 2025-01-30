@@ -54,7 +54,7 @@ describe("Server tests", () => {
         id: "event1",
         sportId: "sport1",
         competitionId: "competition1",
-        startTime: "2025-01-01T00:00:00Z",
+        startTime: "1738195200000",
         homeCompetitorId: "home1",
         awayCompetitorId: "away1",
         status: "status1",
@@ -84,7 +84,7 @@ describe("Server tests", () => {
         id: "event1",
         sport: "FOOTBALL",
         competition: "Champions League",
-        startTime: "2025-01-01T00:00:00Z",
+        startTime: "2025-01-30T00:00:00.000Z",
         status: "PRE",
         scores: {
           CURRENT: {

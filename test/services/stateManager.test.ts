@@ -36,7 +36,7 @@ const event1Data = {
   id: "event1",
   sportId: "sport1",
   competitionId: "competition1",
-  startTime: "1",
+  startTime: "1735690200000",
   homeCompetitorId: "home1",
   awayCompetitorId: "away1",
   status: "status1",
@@ -68,7 +68,7 @@ const event2Data = {
   id: "event2",
   sportId: "sport1",
   competitionId: "competition1",
-  startTime: "1",
+  startTime: "1735690200000",
   homeCompetitorId: "home2",
   awayCompetitorId: "away2",
   status: "status0",
@@ -98,7 +98,7 @@ describe("StateManager", () => {
       event1: {
         id: "event1",
         status: "LIVE",
-        startTime: "1",
+        startTime: "2025-01-01T00:10:00.000Z",
         sport: "FOOTBALL",
         competition: "LALIGA",
         competitors: {
