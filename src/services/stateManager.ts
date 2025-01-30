@@ -1,4 +1,5 @@
 import { RawModel, SportEventModel } from "../models";
+import Logger from "./logger";
 import { mapSportEvents } from "./mapper";
 
 let internalState: Record<string, SportEventModel.SportEvent> = {};
@@ -9,6 +10,7 @@ export const updateState = (events: RawModel.SportEvent[], mappings: RawModel.Ma
   if (mappingsChanged) {
     clearState();
     currentMappingsHash = newMappingsHash;
+    Logger.debug(`Mappings changed, clearing state`);
   }
 
   const sportEvents = mapSportEvents(events, mappings);
