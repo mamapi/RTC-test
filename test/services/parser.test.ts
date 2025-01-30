@@ -5,7 +5,7 @@ import { parseMappings, parseOdds } from "../../src/services/parser";
 describe("Parser", () => {
   it("should parse the mappings correctly", () => {
     const rawMappings = "id1:Real Madrid;id2:Barcelona;id3:Atletico Madrid;id4:Liverpool";
-    const expectedMappings: RawModel.MappingDictionary = {
+    const expectedMappings: RawModel.MappingDict = {
       id1: "Real Madrid",
       id2: "Barcelona",
       id3: "Atletico Madrid",
@@ -23,7 +23,7 @@ describe("Parser", () => {
 
     const odds = `${odd1}\n${odd2}`;
 
-    const expectedOdds: RawModel.SportEventOdd[] = [
+    const expectedOdds: RawModel.SportEvent[] = [
       {
         id: "sportEventId1",
         sportId: "sportId1",
@@ -68,7 +68,7 @@ describe("Parser", () => {
 
   it("should not fail if there are no scores", () => {
     const odd = "sportEventId1,sportId1,cometitionId1,1709900432183,homeTeamId1,awayTeamId1,statusId1";
-    const expectedOdds: RawModel.SportEventOdd[] = [
+    const expectedOdds: RawModel.SportEvent[] = [
       {
         id: "sportEventId1",
         sportId: "sportId1",

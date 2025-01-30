@@ -4,7 +4,7 @@ import { mapSportEvents } from "./mapper";
 let internalState: Record<string, SportEventModel.SportEvent> = {};
 let currentMappingsHash: string = "";
 
-export const updateState = (odds: RawModel.SportEventOdd[], mappings: RawModel.MappingDictionary) => {
+export const updateState = (odds: RawModel.SportEvent[], mappings: RawModel.MappingDict) => {
   const [mappingsChanged, newMappingsHash] = hashMappingsChanged(mappings);
   if (mappingsChanged) {
     clearState();
@@ -25,7 +25,7 @@ export const geAllEvents = () => internalState;
 export const getActiveEvents = () =>
   Object.fromEntries(Object.entries(internalState).filter(([_, event]) => event.status !== "REMOVED"));
 
-const hashMappingsChanged = (mappings: RawModel.MappingDictionary): [boolean, string] => {
+const hashMappingsChanged = (mappings: RawModel.MappingDict): [boolean, string] => {
   const newHash = JSON.stringify(mappings);
   return [newHash !== currentMappingsHash, newHash];
 };

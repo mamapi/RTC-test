@@ -5,7 +5,7 @@ import { SportEventModel } from "../../src/models";
 
 describe("Mapper", () => {
   it("should map the sport events correctly", () => {
-    const odds: RawModel.SportEventOdd[] = [
+    const odds: RawModel.SportEvent[] = [
       {
         id: "event1",
         sportId: "sport1",
@@ -28,7 +28,7 @@ describe("Mapper", () => {
         ],
       },
     ];
-    const mappings: RawModel.MappingDictionary = {
+    const mappings: RawModel.MappingDict = {
       competitor1: "Real Madrid",
       competitor2: "Barcelona",
       status1: "LIVE",
@@ -40,7 +40,7 @@ describe("Mapper", () => {
 
     const sportEvents = mapSportEvents(odds, mappings);
 
-    expect(sportEvents).toEqual<SportEventModel.SportEvents>({
+    expect(sportEvents).toEqual<SportEventModel.EventDict>({
       event1: {
         id: "event1",
         status: "LIVE",

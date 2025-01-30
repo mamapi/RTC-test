@@ -49,7 +49,7 @@ describe("Server tests", () => {
   });
 
   it("should return state after updating", async () => {
-    const odds: RawModel.SportEventOdd[] = [
+    const odds: RawModel.SportEvent[] = [
       {
         id: "event1",
         sportId: "sport1",
@@ -61,7 +61,7 @@ describe("Server tests", () => {
         scores: [{ periodId: "period0", homeScore: "0", awayScore: "0" }],
       },
     ];
-    const mappings: RawModel.MappingDictionary = {
+    const mappings: RawModel.MappingDict = {
       event1: "event1",
       sport1: "FOOTBALL",
       competition1: "Champions League",

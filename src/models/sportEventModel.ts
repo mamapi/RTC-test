@@ -1,11 +1,11 @@
-export type SportEventStatus = "PRE" | "LIVE" | "REMOVED";
+export type EventStatus = "PRE" | "LIVE" | "REMOVED";
 
-export type SportEvents = Record<string, SportEvent>;
+export type EventDict = Record<string, SportEvent>;
 
-export type PeriodId = "CURRENT" | `PERIOD_${number}`;
+export type PeriodType = "CURRENT" | `PERIOD_${number}`;
 
 export type PeriodScore = {
-  type: PeriodId;
+  type: PeriodType;
   home: string;
   away: string;
 };
@@ -14,8 +14,8 @@ export type CompetitorType = "HOME" | "AWAY";
 
 export type SportEvent = {
   id: string;
-  status: SportEventStatus;
-  scores: Record<PeriodId, PeriodScore>;
+  status: EventStatus;
+  scores: Record<PeriodType, PeriodScore>;
   startTime: string | null;
   sport: string;
   competition: string;

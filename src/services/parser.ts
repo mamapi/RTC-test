@@ -1,10 +1,10 @@
-import { MappingDictionary, SportEventOdd, SportEventScore } from "../models/rowModel";
+import { MappingDict, SportEvent, PeriodScore } from "../models/rowModel";
 
-export const parseMappings = (rawMappings: string): MappingDictionary => {
+export const parseMappings = (rawMappings: string): MappingDict => {
   return Object.fromEntries(rawMappings.split(";").map((entry) => entry.split(":")));
 };
 
-export const parseOdds = (rawOdds: string): SportEventOdd[] => {
+export const parseOdds = (rawOdds: string): SportEvent[] => {
   const odds = rawOdds.split("\n").map((odd) => {
     const [id, sportId, competitionId, startTime, homeCompetitorId, awayCompetitorId, status, scores] = odd.split(",");
     return {
@@ -21,7 +21,7 @@ export const parseOdds = (rawOdds: string): SportEventOdd[] => {
   return odds;
 };
 
-const parseScores = (scores?: string): SportEventScore[] => {
+const parseScores = (scores?: string): PeriodScore[] => {
   if (!scores) return [];
 
   return scores.split("|").map((score) => {

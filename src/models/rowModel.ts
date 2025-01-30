@@ -1,6 +1,6 @@
-export type MappingDictionary = Record<string, string>;
+export type MappingDict = Record<string, string>;
 
-export type SportEventOdd = {
+export type SportEvent = {
   id: string;
   sportId: string;
   competitionId: string;
@@ -8,10 +8,10 @@ export type SportEventOdd = {
   homeCompetitorId: string;
   awayCompetitorId: string;
   status: string;
-  scores: SportEventScore[];
+  scores: PeriodScore[];
 };
 
-export type SportEventScore = {
+export type PeriodScore = {
   periodId: string;
   homeScore: string;
   awayScore: string;
