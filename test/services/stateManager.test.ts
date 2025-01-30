@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { MappingDictionary, SportEventOdd } from "../../src/services/parser";
 import { updateState, geAllEvents, getActiveEvents, clearState } from "../../src/services/stateManager";
 
-const mappings: MappingDictionary = {
+const mappings1: MappingDictionary = {
   event1: "event1",
   event2: "event2",
   sport1: "FOOTBALL",
@@ -11,6 +11,17 @@ const mappings: MappingDictionary = {
   away1: "Barcelona",
   home2: "Valencia",
   away2: "Atletico Madrid",
+  status0: "PRE",
+  status1: "LIVE",
+};
+
+const mappings2: MappingDictionary = {
+  event1: "event1",
+  event2: "event2",
+  sport1: "BASKETBALL",
+  competition1: "NBA",
+  home1: "Lakers",
+  away1: "Warriors",
   status0: "PRE",
   status1: "LIVE",
 };
@@ -74,7 +85,7 @@ describe("StateManager", () => {
   });
 
   it("should update the state correctly", () => {
-    updateState([event1Update1], mappings);
+    updateState([event1Update1], mappings1);
 
     const state = geAllEvents();
     expect(state).toEqual({
@@ -104,7 +115,7 @@ describe("StateManager", () => {
       },
     });
 
-    updateState([event1Update2], mappings);
+    updateState([event1Update2], mappings1);
 
     expect(getActiveEvents()).toEqual({
       event1: {
@@ -121,20 +132,32 @@ describe("StateManager", () => {
   });
 
   it("should not return the event from the state if it is not in the updates", () => {
-    updateState([event1Update1, event2Update1], mappings);
+    updateState([event1Update1, event2Update1], mappings1);
     expect(Object.keys(getActiveEvents())).toEqual(["event1", "event2"]);
 
-    updateState([event2Update1], mappings);
+    updateState([event2Update1], mappings1);
     expect(Object.keys(getActiveEvents())).toEqual(["event2"]);
     expect(Object.keys(geAllEvents())).toEqual(["event1", "event2"]);
     expect(geAllEvents().event1.status).toEqual("REMOVED");
   });
 
   it("should clear all events when clearState is called", () => {
-    updateState([event1Update1], mappings);
+    updateState([event1Update1], mappings1);
     expect(Object.keys(geAllEvents())).toEqual(["event1"]);
 
     clearState();
     expect(Object.keys(geAllEvents())).toEqual([]);
+  });
+
+  it("should clear the state when mappings change", () => {
+    updateState([event1Update1], mappings1);
+    expect(Object.keys(geAllEvents())).toEqual(["event1"]);
+
+    updateState([event1Update2], mappings1);
+    expect(Object.keys(geAllEvents())).toEqual(["event1"]);
+
+    // switch to new mappings - should clear previous state
+    updateState([event2Update1], mappings2);
+    expect(Object.keys(geAllEvents())).toEqual(["event2"]);
   });
 });
