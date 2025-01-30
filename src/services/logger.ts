@@ -8,7 +8,16 @@ export const LoggerColors = {
 
 export type LogLevels = "info" | "debug" | "warn" | "error";
 
+const LOG_LEVEL_PRIORITY = {
+  debug: 0,
+  info: 1,
+  warn: 2,
+  error: 3,
+} as const;
+
 class Logger {
+  private static currentLogLevel: LogLevels = "info";
+
   static info(message: string) {
     this.log(message, "info", "green");
   }
@@ -25,11 +34,17 @@ class Logger {
     this.log(message, "error", "red");
   }
 
+  static setLogLevel(level: LogLevels) {
+    this.currentLogLevel = level;
+  }
+
   private static log(message: string, level: LogLevels, colorKey: keyof typeof LoggerColors) {
-    const timestamp = this.getTimestamp();
-    const color = LoggerColors[colorKey];
-    const reset = LoggerColors.reset;
-    console.log(`[${timestamp}] ${color}[${level.toUpperCase()}]${reset} ${message}`);
+    if (LOG_LEVEL_PRIORITY[level] >= LOG_LEVEL_PRIORITY[this.currentLogLevel]) {
+      const timestamp = this.getTimestamp();
+      const color = LoggerColors[colorKey];
+      const reset = LoggerColors.reset;
+      console.log(`[${timestamp}] ${color}[${level.toUpperCase()}]${reset} ${message}`);
+    }
   }
 
   private static getTimestamp(): string {

@@ -8,6 +8,8 @@ import { ServerConfig, getConfig } from "./config";
 export let server: Hapi.Server;
 
 export const init = async (config: ServerConfig = getConfig()): Promise<Hapi.Server> => {
+  Logger.setLogLevel(config.logLevel);
+
   server = Hapi.server({
     port: config.apiPort,
     host: "localhost",
