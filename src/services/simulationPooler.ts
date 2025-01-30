@@ -12,13 +12,17 @@ class SimulationPooler {
   }
 
   private async onTick() {
-    const [stateResponse, mappingsResponse] = await Promise.all([
-      this.apiClient.fetchState(),
-      this.apiClient.fetchMappings(),
-    ]);
-    const mappings = parseMappings(mappingsResponse.mappings);
-    const odds = parseOdds(stateResponse.odds);
-    updateState(odds, mappings);
+    try {
+      const [stateResponse, mappingsResponse] = await Promise.all([
+        this.apiClient.fetchState(),
+        this.apiClient.fetchMappings(),
+      ]);
+      const mappings = parseMappings(mappingsResponse.mappings);
+      const odds = parseOdds(stateResponse.odds);
+      updateState(odds, mappings);
+    } catch (error) {
+      console.error("Error in simulation pooler", error);
+    }
   }
 
   stop() {
