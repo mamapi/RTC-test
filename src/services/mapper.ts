@@ -19,7 +19,7 @@ export type SportEvent = {
   id: string;
   status: SportEventStatus;
   scores: Record<PeriodId, PeriodScore>;
-  startTime: string;
+  startTime: string | null;
   sport: string;
   competition: string;
   competitors: Record<CompetitorType, { type: CompetitorType; name: string }>;
