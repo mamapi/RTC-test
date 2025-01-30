@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { server, init } from "../src";
 import { updateState } from "../src/services/stateManager";
-import { MappingDictionary, SportEventOdd } from "../src/services/parser";
+import { RawModel } from "../src/models";
 import { SportEvents } from "../src/services/mapper";
 
 describe("Server tests", () => {
@@ -49,7 +49,7 @@ describe("Server tests", () => {
   });
 
   it("should return state after updating", async () => {
-    const odds: SportEventOdd[] = [
+    const odds: RawModel.SportEventOdd[] = [
       {
         id: "event1",
         sportId: "sport1",
@@ -61,7 +61,7 @@ describe("Server tests", () => {
         scores: [{ periodId: "period0", homeScore: "0", awayScore: "0" }],
       },
     ];
-    const mappings: MappingDictionary = {
+    const mappings: RawModel.MappingDictionary = {
       event1: "event1",
       sport1: "FOOTBALL",
       competition1: "Champions League",

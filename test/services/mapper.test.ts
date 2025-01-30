@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { MappingDictionary, SportEventOdd } from "../../src/services/parser";
+import { RawModel } from "../../src/models";
 import { mapSportEvents, SportEvents } from "../../src/services/mapper";
 
 describe("Mapper", () => {
   it("should map the sport events correctly", () => {
-    const odds: SportEventOdd[] = [
+    const odds: RawModel.SportEventOdd[] = [
       {
         id: "event1",
         sportId: "sport1",
@@ -27,7 +27,7 @@ describe("Mapper", () => {
         ],
       },
     ];
-    const mappings: MappingDictionary = {
+    const mappings: RawModel.MappingDictionary = {
       competitor1: "Real Madrid",
       competitor2: "Barcelona",
       status1: "LIVE",

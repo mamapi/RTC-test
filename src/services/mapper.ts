@@ -1,4 +1,4 @@
-import { MappingDictionary, SportEventOdd, SportEventScore } from "./parser";
+import { RawModel } from "../models";
 import { formatDate } from "../utils/dateUtils";
 
 export type SportEventStatus = "PRE" | "LIVE" | "REMOVED";
@@ -25,10 +25,10 @@ export type SportEvent = {
   competitors: Record<CompetitorType, { type: CompetitorType; name: string }>;
 };
 
-export const mapSportEvents = (odds: SportEventOdd[], mappings: MappingDictionary) =>
+export const mapSportEvents = (odds: RawModel.SportEventOdd[], mappings: RawModel.MappingDictionary) =>
   Object.fromEntries(odds.map((odd) => [odd.id, mapSportEvent(odd, mappings)]));
 
-const mapSportEvent = (odd: SportEventOdd, mappings: MappingDictionary): SportEvent => {
+const mapSportEvent = (odd: RawModel.SportEventOdd, mappings: RawModel.MappingDictionary): SportEvent => {
   const scores = mapScores(odd.scores, mappings);
   const competitors = mapCompetitors(odd.homeCompetitorId, odd.awayCompetitorId, mappings);
   const startTime = formatDate(odd.startTime);
@@ -45,7 +45,7 @@ const mapSportEvent = (odd: SportEventOdd, mappings: MappingDictionary): SportEv
   return sportEvent;
 };
 
-const mapScores = (scores: SportEventScore[], mappings: MappingDictionary) =>
+const mapScores = (scores: RawModel.SportEventScore[], mappings: RawModel.MappingDictionary) =>
   Object.fromEntries(
     scores.map((score) => {
       const periodType = mappings[score.periodId] as PeriodId;
@@ -63,7 +63,7 @@ const mapScores = (scores: SportEventScore[], mappings: MappingDictionary) =>
 const mapCompetitors = (
   homeCompetitorId: string,
   awayCompetitorId: string,
-  mappings: MappingDictionary
+  mappings: RawModel.MappingDictionary
 ): Record<CompetitorType, { type: CompetitorType; name: string }> => {
   const competitors = {
     HOME: {

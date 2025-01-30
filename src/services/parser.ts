@@ -1,21 +1,4 @@
-export type MappingDictionary = Record<string, string>;
-
-export type SportEventOdd = {
-  id: string;
-  sportId: string;
-  competitionId: string;
-  startTime: string;
-  homeCompetitorId: string;
-  awayCompetitorId: string;
-  status: string;
-  scores: SportEventScore[];
-};
-
-export type SportEventScore = {
-  periodId: string;
-  homeScore: string;
-  awayScore: string;
-};
+import { MappingDictionary, SportEventOdd, SportEventScore } from "../models/rowModel";
 
 export const parseMappings = (rawMappings: string): MappingDictionary => {
   return Object.fromEntries(rawMappings.split(";").map((entry) => entry.split(":")));

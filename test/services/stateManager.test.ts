@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { MappingDictionary, SportEventOdd } from "../../src/services/parser";
+import { RawModel } from "../../src/models";
 import { updateState, geAllEvents, getActiveEvents, clearState } from "../../src/services/stateManager";
 
-const mappings1: MappingDictionary = {
+const mappings1: RawModel.MappingDictionary = {
   event1: "event1",
   event2: "event2",
   sport1: "FOOTBALL",
@@ -18,7 +18,7 @@ const mappings1: MappingDictionary = {
   period2: "PERIOD_2",
 };
 
-const mappings2: MappingDictionary = {
+const mappings2: RawModel.MappingDictionary = {
   event1: "event1",
   event2: "event2",
   sport1: "BASKETBALL",
@@ -42,7 +42,7 @@ const event1Data = {
   status: "status1",
 };
 
-const event1Update1: SportEventOdd = {
+const event1Update1: RawModel.SportEventOdd = {
   ...event1Data,
   scores: [
     {
@@ -53,7 +53,7 @@ const event1Update1: SportEventOdd = {
   ],
 };
 
-const event1Update2: SportEventOdd = {
+const event1Update2: RawModel.SportEventOdd = {
   ...event1Data,
   scores: [
     {
@@ -74,7 +74,7 @@ const event2Data = {
   status: "status0",
 };
 
-const event2Update1: SportEventOdd = {
+const event2Update1: RawModel.SportEventOdd = {
   ...event2Data,
   scores: [
     {
