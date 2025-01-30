@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { server, init } from "../src";
+import { server, init } from "../src/app";
 import { updateState } from "../src/services/stateManager";
 import { RawModel, SportEventModel } from "../src/models";
 
