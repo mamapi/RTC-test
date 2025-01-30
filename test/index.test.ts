@@ -58,7 +58,7 @@ describe("Server tests", () => {
         homeCompetitorId: "home1",
         awayCompetitorId: "away1",
         status: "status1",
-        scores: [{ periodId: "CURRENT", homeScore: "0", awayScore: "0" }],
+        scores: [{ periodId: "period0", homeScore: "0", awayScore: "0" }],
       },
     ];
     const mappings: MappingDictionary = {
@@ -68,6 +68,8 @@ describe("Server tests", () => {
       home1: "Legia Warsaw",
       away1: "Barcelona",
       status1: "PRE",
+      period0: "CURRENT",
+      period1: "PERIOD_1",
     };
 
     updateState(odds, mappings);
