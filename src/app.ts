@@ -1,4 +1,5 @@
 import Hapi from "@hapi/hapi";
+import Logger from "./services/logger";
 import clientRoutes from "./routes/client";
 import ApiClient from "./services/apiClient";
 import SimulationPooler from "./services/simulationPooler";
@@ -12,6 +13,11 @@ export const init = async (config: ServerConfig = getConfig()): Promise<Hapi.Ser
     host: "localhost",
   });
 
+  server.events.on("response", (request) => {
+    const { method, path } = request;
+    Logger.info(`${method.toUpperCase()} ${path}`);
+  });
+
   server.route(clientRoutes);
 
   const apiClient = new ApiClient(config.simulationApiUrl);
@@ -23,7 +29,7 @@ export const init = async (config: ServerConfig = getConfig()): Promise<Hapi.Ser
 
 export const start = async () => {
   const { host, port } = server.settings;
-  console.log(`Listening on ${host}:${port}`);
+  Logger.info(`Listening on ${host}:${port}`);
   await server.start();
 };
 
