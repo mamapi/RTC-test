@@ -28,7 +28,7 @@ export const mapSportEvents = (odds: SportEventOdd[], mappings: MappingDictionar
   Object.fromEntries(odds.map((odd) => [odd.id, mapSportEvent(odd, mappings)]));
 
 const mapSportEvent = (odd: SportEventOdd, mappings: MappingDictionary): SportEvent => {
-  const scores = mapScores(odd.scores);
+  const scores = mapScores(odd.scores, mappings);
   const competitors = mapCompetitors(odd.homeCompetitorId, odd.awayCompetitorId, mappings);
   const sportEvent: SportEvent = {
     id: odd.id,
@@ -43,9 +43,16 @@ const mapSportEvent = (odd: SportEventOdd, mappings: MappingDictionary): SportEv
   return sportEvent;
 };
 
-const mapScores = (scores: SportEventScore[]) =>
+const mapScores = (scores: SportEventScore[], mappings: MappingDictionary) =>
   Object.fromEntries(
-    scores.map((score) => [score.periodId, { type: score.periodId, home: score.homeScore, away: score.awayScore }])
+    scores.map((score) => [
+      mappings[score.periodId],
+      {
+        type: mappings[score.periodId],
+        home: score.homeScore,
+        away: score.awayScore,
+      },
+    ])
   ) as Record<PeriodId, PeriodScore>;
 
 const mapCompetitors = (
