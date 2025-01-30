@@ -8,9 +8,7 @@ class SimulationPooler {
   constructor(private readonly apiClient: ApiClient, private readonly intervalMs: number) {}
 
   start() {
-    this.intervalId = setInterval(() => {
-      this.onTick();
-    }, this.intervalMs);
+    this.intervalId = setInterval(() => this.onTick(), this.intervalMs);
   }
 
   private async onTick() {
