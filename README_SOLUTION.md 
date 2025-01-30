@@ -1,0 +1,29 @@
+# Real-Time Sports Events Tracking Application
+
+## Description
+A real-time sports event tracking application that processes data from an external simulation API. The application monitors different sports events, updating their statuses, scores, and other details. The application uses polling to regularly fetch data and maintain the current state of all active sporting events.
+
+## Table of Contents
+- [Installation](#installation)
+- [Environment Variables](#environment-variables)
+- [API Reference](#api-reference)
+
+## Installation
+To install and run this project locally, follow these steps:
+
+1. Clone the repository
+2. Run `npm install` to install the dependencies
+3. Run `npm run build` to build the project
+4. Run `npm run start` to start the server
+
+## Environment Variables
+
+| Name | Description | Default value |
+| ---- | ------ |---------------|
+| API_PORT | A port to expose API to | 4000          |
+| SIMULATION_API_URL | A URL to the simulation API | http://localhost:3000/api          |
+| POOLER_INTERVAL_MS | A interval in milliseconds to poll the simulation API | 1000             |
+
+## API Reference
+
+GET `/client/state` - Returns the current state of all active sporting events.
