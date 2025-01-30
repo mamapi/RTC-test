@@ -5,6 +5,7 @@ export default defineConfig({
     clearMocks: true,
     coverage: {
       reporter: ['text', 'lcov'],
+      exclude: ['**/index.ts'],
     },
   },
 });
