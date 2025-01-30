@@ -1,4 +1,5 @@
 import { MappingDictionary, SportEventOdd, SportEventScore } from "./parser";
+import { formatDate } from "../utils/dateUtils";
 
 export type SportEventStatus = "PRE" | "LIVE" | "REMOVED";
 
@@ -30,11 +31,12 @@ export const mapSportEvents = (odds: SportEventOdd[], mappings: MappingDictionar
 const mapSportEvent = (odd: SportEventOdd, mappings: MappingDictionary): SportEvent => {
   const scores = mapScores(odd.scores, mappings);
   const competitors = mapCompetitors(odd.homeCompetitorId, odd.awayCompetitorId, mappings);
+  const startTime = formatDate(odd.startTime);
   const sportEvent: SportEvent = {
     id: odd.id,
     status: mappings[odd.status] as SportEventStatus,
     scores,
-    startTime: odd.startTime,
+    startTime,
     sport: mappings[odd.sportId],
     competition: mappings[odd.competitionId],
     competitors,
