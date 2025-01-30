@@ -64,4 +64,22 @@ describe("Parser", () => {
     const parsedOdds = parseOdds(odds);
     expect(parsedOdds).toEqual(expectedOdds);
   });
+
+  it("should not fail if there are no scores", () => {
+    const odd = "sportEventId1,sportId1,cometitionId1,1709900432183,homeTeamId1,awayTeamId1,statusId1";
+    const expectedOdds: SportEventOdd[] = [
+      {
+        id: "sportEventId1",
+        sportId: "sportId1",
+        competitionId: "cometitionId1",
+        startTime: "1709900432183",
+        homeCompetitorId: "homeTeamId1",
+        awayCompetitorId: "awayTeamId1",
+        status: "statusId1",
+        scores: [],
+      },
+    ];
+    const parsedOdds = parseOdds(odd);
+    expect(parsedOdds).toEqual(expectedOdds);
+  });
 });
