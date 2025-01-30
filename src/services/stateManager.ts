@@ -12,17 +12,8 @@ export const updateState = (odds: SportEventOdd[], mappings: MappingDictionary) 
   }
 
   const sportEvents = mapSportEvents(odds, mappings);
-
-  // Update and add new events
-  Object.assign(internalState, sportEvents);
-
-  // Mark removed events
-  const newEventIds = new Set(Object.keys(sportEvents));
-  Object.keys(internalState)
-    .filter((key) => !newEventIds.has(key))
-    .forEach((key) => {
-      internalState[key].status = "REMOVED";
-    });
+  updateEvents(sportEvents);
+  markRemovedEvents(sportEvents);
 };
 
 export const clearState = () => {
@@ -37,4 +28,17 @@ export const getActiveEvents = () =>
 const hashMappingsChanged = (mappings: MappingDictionary): [boolean, string] => {
   const newHash = JSON.stringify(mappings);
   return [newHash !== currentMappingsHash, newHash];
+};
+
+const updateEvents = (events: Record<string, SportEvent>) => {
+  Object.assign(internalState, events);
+};
+
+const markRemovedEvents = (events: Record<string, SportEvent>) => {
+  const newEventIds = new Set(Object.keys(events));
+  Object.keys(internalState)
+    .filter((key) => !newEventIds.has(key))
+    .forEach((key) => {
+      internalState[key].status = "REMOVED";
+    });
 };
