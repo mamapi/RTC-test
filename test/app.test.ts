@@ -1,7 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { server, init } from "../src/app";
 import { updateState } from "../src/services/stateManager";
 import { RawModel, SportEventModel } from "../src/models";
+import { getConfig } from "../src/config";
 
 describe("Server tests", () => {
   beforeEach(async () => {
@@ -18,14 +19,17 @@ describe("Server tests", () => {
     expect(server.settings.host).toBe("localhost");
   });
 
-  it("server handles environment port variable", async () => {
-    process.env.PORT = "4001";
+  it("should initialize server with custom port", async () => {
+    const customPort = 4001;
+    const mockConfig = {
+      ...getConfig(),
+      apiPort: customPort,
+    };
 
+    const newServer = await init(mockConfig);
+
+    expect(newServer.settings.port).toBe(customPort);
     await server.stop();
-    const newServer = await init();
-
-    expect(newServer.settings.port).toBe(4001);
-    delete process.env.PORT;
   });
 
   it("should return 404 when accessing a non-existent route", async () => {
