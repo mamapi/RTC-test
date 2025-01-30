@@ -1,7 +1,7 @@
-import { RawModel } from "../models";
-import { mapSportEvents, SportEvent } from "./mapper";
+import { RawModel, SportEventModel } from "../models";
+import { mapSportEvents } from "./mapper";
 
-let internalState: Record<string, SportEvent> = {};
+let internalState: Record<string, SportEventModel.SportEvent> = {};
 let currentMappingsHash: string = "";
 
 export const updateState = (odds: RawModel.SportEventOdd[], mappings: RawModel.MappingDictionary) => {
@@ -30,11 +30,11 @@ const hashMappingsChanged = (mappings: RawModel.MappingDictionary): [boolean, st
   return [newHash !== currentMappingsHash, newHash];
 };
 
-const updateEvents = (events: Record<string, SportEvent>) => {
+const updateEvents = (events: Record<string, SportEventModel.SportEvent>) => {
   Object.assign(internalState, events);
 };
 
-const markRemovedEvents = (events: Record<string, SportEvent>) => {
+const markRemovedEvents = (events: Record<string, SportEventModel.SportEvent>) => {
   const newEventIds = new Set(Object.keys(events));
   Object.keys(internalState)
     .filter((key) => !newEventIds.has(key))

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { RawModel } from "../../src/models";
-import { mapSportEvents, SportEvents } from "../../src/services/mapper";
+import { mapSportEvents } from "../../src/services/mapper";
+import { SportEventModel } from "../../src/models";
 
 describe("Mapper", () => {
   it("should map the sport events correctly", () => {
@@ -39,7 +40,7 @@ describe("Mapper", () => {
 
     const sportEvents = mapSportEvents(odds, mappings);
 
-    expect(sportEvents).toEqual<SportEvents>({
+    expect(sportEvents).toEqual<SportEventModel.SportEvents>({
       event1: {
         id: "event1",
         status: "LIVE",
