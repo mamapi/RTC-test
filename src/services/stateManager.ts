@@ -2,8 +2,15 @@ import { MappingDictionary, SportEventOdd } from "./parser";
 import { mapSportEvents, SportEvent } from "./mapper";
 
 let internalState: Record<string, SportEvent> = {};
+let currentMappingsHash: string = "";
 
 export const updateState = (odds: SportEventOdd[], mappings: MappingDictionary) => {
+  const newMappingsHash = JSON.stringify(mappings);
+  if (newMappingsHash !== currentMappingsHash) {
+    clearState();
+    currentMappingsHash = newMappingsHash;
+  }
+
   const sportEvents = mapSportEvents(odds, mappings);
 
   // Update and add new events
