@@ -45,14 +45,17 @@ const mapSportEvent = (odd: SportEventOdd, mappings: MappingDictionary): SportEv
 
 const mapScores = (scores: SportEventScore[], mappings: MappingDictionary) =>
   Object.fromEntries(
-    scores.map((score) => [
-      mappings[score.periodId],
-      {
-        type: mappings[score.periodId],
+    scores.map((score) => {
+      const periodType = mappings[score.periodId] as PeriodId;
+
+      const periodScore: PeriodScore = {
+        type: periodType,
         home: score.homeScore,
         away: score.awayScore,
-      },
-    ])
+      };
+
+      return [periodType, periodScore];
+    })
   ) as Record<PeriodId, PeriodScore>;
 
 const mapCompetitors = (
