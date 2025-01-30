@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import SimulationPooler from "../../src/services/simulationPooler";
+import ApiClient from "../../src/services/apiClient";
 
 describe("SimulationPooler", () => {
   beforeEach(() => {
@@ -11,12 +12,14 @@ describe("SimulationPooler", () => {
   });
 
   it("should create instance with specified interval", () => {
-    const pooler = new SimulationPooler(1000);
+    const apiClient = new ApiClient("http://localhost:3000");
+    const pooler = new SimulationPooler(apiClient, 1000);
     expect(pooler).toBeInstanceOf(SimulationPooler);
   });
 
   it("should not execute more ticks after stop is called", () => {
-    const pooler = new SimulationPooler(1000);
+    const apiClient = new ApiClient("http://localhost:3000");
+    const pooler = new SimulationPooler(apiClient, 1000);
     const onTickSpy = vi.spyOn(pooler as any, "onTick");
     const expectedCalls = 2;
 
@@ -26,6 +29,7 @@ describe("SimulationPooler", () => {
 
     pooler.stop();
     vi.advanceTimersByTime(1000);
+
     expect(onTickSpy).toHaveBeenCalledTimes(expectedCalls);
   });
 });

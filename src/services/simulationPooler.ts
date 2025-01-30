@@ -1,7 +1,11 @@
+import ApiClient from "./apiClient";
+import { parseMappings, parseOdds } from "./parser";
+import { updateState } from "./stateManager";
+
 class SimulationPooler {
   private intervalId: NodeJS.Timeout | null = null;
 
-  constructor(private readonly intervalMs: number) {}
+  constructor(private readonly apiClient: ApiClient, private readonly intervalMs: number) {}
 
   start() {
     this.intervalId = setInterval(() => {
@@ -9,8 +13,14 @@ class SimulationPooler {
     }, this.intervalMs);
   }
 
-  private onTick() {
-    console.log("tick");
+  private async onTick() {
+    const [stateResponse, mappingsResponse] = await Promise.all([
+      this.apiClient.fetchState(),
+      this.apiClient.fetchMappings(),
+    ]);
+    const mappings = parseMappings(mappingsResponse.mappings);
+    const odds = parseOdds(stateResponse.odds);
+    updateState(odds, mappings);
   }
 
   stop() {
