@@ -1,13 +1,11 @@
 import { ServerRoute } from "@hapi/hapi";
-import { getActiveEvents } from "../services/stateManager";
+import * as clientController from "../controllers/clientController";
 
 const clientRoutes: ServerRoute[] = [
   {
     method: "GET",
     path: "/client/state",
-    handler: (_request, h) => {
-      return h.response(getActiveEvents()).code(200);
-    },
+    handler: clientController.getState,
   },
 ];
 
