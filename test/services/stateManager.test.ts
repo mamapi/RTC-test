@@ -21,10 +21,10 @@ const mappings1: RawModel.MappingDict = {
 const mappings2: RawModel.MappingDict = {
   event1: "event1",
   event2: "event2",
-  sport1: "BASKETBALL",
-  competition1: "NBA",
-  home1: "Lakers",
-  away1: "Warriors",
+  sport2: "BASKETBALL",
+  competition2: "NBA",
+  home2: "Lakers",
+  away2: "Warriors",
   status0: "PRE",
   status1: "LIVE",
   period0: "CURRENT",
@@ -66,8 +66,8 @@ const event1Update2: RawModel.SportEvent = {
 
 const event2Data = {
   id: "event2",
-  sportId: "sport1",
-  competitionId: "competition1",
+  sportId: "sport2",
+  competitionId: "competition2",
   startTime: "1735690200000",
   homeCompetitorId: "home2",
   awayCompetitorId: "away2",
