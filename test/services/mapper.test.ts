@@ -58,4 +58,41 @@ describe("Mapper", () => {
       },
     });
   });
+
+  it("should map the sport events correctly", () => {
+    const events: RawModel.SportEvent[] = [
+      {
+        id: "event1",
+        sportId: "sport1",
+        competitionId: "competition1",
+        startTime: "1709900432183",
+        homeCompetitorId: "competitor1",
+        awayCompetitorId: "competitor2",
+        status: "status1",
+        scores: [
+          {
+            periodId: "period1",
+            homeScore: "1",
+            awayScore: "2",
+          },
+          {
+            periodId: "period0",
+            homeScore: "3",
+            awayScore: "4",
+          },
+        ],
+      },
+    ];
+    const mappings: RawModel.MappingDict = {
+      competitor1: "Real Madrid",
+      competitor2: "Barcelona",
+      status1: "LIVE",
+      competition1: "La Liga",
+      period0: "CURRENT",
+      period1: "PERIOD_1",
+    };
+
+
+    expect(() => mapSportEvents(events, mappings)).toThrow("Cannot map sport events: Missing mappings");
+  });
 });
