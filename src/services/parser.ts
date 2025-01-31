@@ -1,6 +1,8 @@
 import { MappingDict, SportEvent, PeriodScore } from "../models/rowModel";
 
-export const parseMappings = (rawMappings: string): MappingDict => {
+export const parseMappings = (rawMappings?: string | null): MappingDict => {
+  if (!rawMappings?.trim()) throw new Error("Cannot parse mappings: Invalid mappings input");
+
   return Object.fromEntries(rawMappings.split(";").map((entry) => entry.split(":")));
 };
 

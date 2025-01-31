@@ -21,7 +21,7 @@ describe("Parser", () => {
     { scenario: "undefined", input: undefined },
     { scenario: "whitespace only", input: " " },
   ])("should throw error when mappings input is $scenario", ({ input }) => {
-    expect(() => parseMappings(input)).toThrow();
+    expect(() => parseMappings(input)).toThrow("Cannot parse mappings: Invalid mappings input");
   });
 
   it("should parse the odds correctly", () => {
