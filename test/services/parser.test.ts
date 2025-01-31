@@ -93,8 +93,18 @@ describe("Parser", () => {
     expect(parsedEvents).toEqual(expectedEvents);
   });
 
-  it("should throw error when event has insufficient number of fields", () => {
-    const event = "sportEventId1,sportId1,,homeTeamId1,";
-    expect(() => parseEvents(event)).toThrow("Cannot parse events: Insufficient number of fields at line 1");
+  it.each([
+    {
+      input: "sportEventId1,sportId1,,homeTeamId1,",
+      failingLine: 1,
+    },
+    {
+      input: "sportEventId1,sportId1,competitionId1,1709900432183,homeTeamId1,awayTeamId1,statusId1\nsportEventId1,sportId1,,homeTeamId1,",
+      failingLine: 2,
+    },
+  ])("should throw error when event has insufficient fields at line $failingLine", ({ input, failingLine }) => {
+    expect(() => parseEvents(input)).toThrow(
+      `Cannot parse events: Insufficient number of fields at line ${failingLine}`
+    );
   });
 });
