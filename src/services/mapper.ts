@@ -5,6 +5,10 @@ export const mapSportEvents = (events: RawModel.SportEvent[], mappings: RawModel
   Object.fromEntries(events.map((event) => [event.id, mapSportEvent(event, mappings)]));
 
 const mapSportEvent = (event: RawModel.SportEvent, mappings: RawModel.MappingDict): SportEventModel.SportEvent => {
+  if (!mappings[event.sportId]) throw new Error("Cannot map sport events: Missing mappings");
+  if (!mappings[event.competitionId]) throw new Error("Cannot map sport events: Missing mappings");
+  if (!mappings[event.status]) throw new Error("Cannot map sport events: Missing mappings");
+
   const scores = mapScores(event.scores, mappings);
   const competitors = mapCompetitors(event.homeCompetitorId, event.awayCompetitorId, mappings);
   const startTime = formatDate(event.startTime);
