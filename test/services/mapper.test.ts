@@ -65,12 +65,28 @@ describe("Mapper", () => {
       description: "missing sport mapping",
     },
     {
+      missingKey: "competition1",
+      description: "missing competition mapping",
+    },
+    {
+      missingKey: "competitor1",
+      description: "missing home competitor mapping",
+    },
+    {
+      missingKey: "competitor2",
+      description: "missing away competitor mapping",
+    },
+    {
       missingKey: "status1",
       description: "missing status mapping",
     },
     {
-      missingKey: "competition1",
-      description: "missing competition mapping",
+      missingKey: "period0",
+      description: "missing period mapping",
+    },
+    {
+      missingKey: "period1",
+      description: "missing period mapping",
     },
   ])("should throw error when $description", ({ missingKey }) => {
     const events: RawModel.SportEvent[] = [
