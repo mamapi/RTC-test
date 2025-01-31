@@ -59,7 +59,20 @@ describe("Mapper", () => {
     });
   });
 
-  it("should map the sport events correctly", () => {
+  it.each([
+    {
+      missingKey: "sport1",
+      description: "missing sport mapping",
+    },
+    {
+      missingKey: "status1",
+      description: "missing status mapping",
+    },
+    {
+      missingKey: "competition1",
+      description: "missing competition mapping",
+    },
+  ])("should throw error when $description", ({ missingKey }) => {
     const events: RawModel.SportEvent[] = [
       {
         id: "event1",
@@ -83,15 +96,18 @@ describe("Mapper", () => {
         ],
       },
     ];
-    const mappings: RawModel.MappingDict = {
+
+    const fullMappings: RawModel.MappingDict = {
       competitor1: "Real Madrid",
       competitor2: "Barcelona",
       status1: "LIVE",
+      sport1: "FOOTBALL",
       competition1: "La Liga",
       period0: "CURRENT",
       period1: "PERIOD_1",
     };
 
+    const mappings = Object.fromEntries(Object.entries(fullMappings).filter(([key]) => key !== missingKey));
 
     expect(() => mapSportEvents(events, mappings)).toThrow("Cannot map sport events: Missing mappings");
   });
