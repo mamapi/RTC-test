@@ -107,4 +107,13 @@ describe("Parser", () => {
       `Cannot parse events: Insufficient number of fields at line ${failingLine}`
     );
   });
+
+  it.each([
+    { scenario: "empty", input: "" },
+    { scenario: "null", input: null },
+    { scenario: "undefined", input: undefined },
+    { scenario: "whitespace only", input: " " },
+  ])("should throw error when events input is $scenario", ({ input }) => {
+    expect(() => parseEvents(input)).toThrow("Cannot parse events: Invalid events input");
+  });
 });
