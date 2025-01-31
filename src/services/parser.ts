@@ -7,10 +7,10 @@ export const parseMappings = (rawMappings?: string | null): MappingDict => {
 };
 
 export const parseEvents = (rawEvents: string): SportEvent[] => {
-  const events = rawEvents.split("\n").map((event) => {
+  const events = rawEvents.split("\n").map((event, index) => {
     const fields = event.split(",");
 
-    if (fields.length < 7) throw new Error("Cannot parse events: Insufficient number of fields");
+    if (fields.length < 7) throw new Error(`Cannot parse events: Insufficient number of fields at line ${index + 1}`);
 
     const [id, sportId, competitionId, startTime, homeCompetitorId, awayCompetitorId, status, scores] = fields;
     return {
