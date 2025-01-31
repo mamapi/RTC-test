@@ -7,6 +7,8 @@ export const parseMappings = (rawMappings?: string | null): MappingDict => {
 };
 
 export const parseEvents = (rawEvents: string): SportEvent[] => {
+  if (!rawEvents?.trim()) throw new Error("Cannot parse events: Invalid events input");
+
   const events = rawEvents.split("\n").map((event, index) => {
     const fields = event.split(",");
 
