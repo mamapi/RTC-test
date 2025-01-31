@@ -6,33 +6,44 @@ import SimulationPooler from "./services/simulationPooler";
 import { ServerConfig, getConfig } from "./config";
 
 export let server: Hapi.Server;
+export let pooler: SimulationPooler;
 
 export const init = async (config: ServerConfig = getConfig()): Promise<Hapi.Server> => {
   Logger.setLogLevel(config.logLevel);
 
-  server = Hapi.server({
-    port: config.apiPort,
-    host: "localhost",
-  });
+  const initServer = () => {
+    const server = Hapi.server({
+      port: config.apiPort,
+      host: "localhost",
+    });
 
-  server.events.on("response", (request) => {
-    const { method, path } = request;
-    Logger.info(`${method.toUpperCase()} ${path}`);
-  });
+    server.route(clientRoutes);
 
-  server.route(clientRoutes);
+    server.events.on("response", (request) => {
+      const { method, path } = request;
+      Logger.info(`${method.toUpperCase()} ${path}`);
+    });
 
-  const apiClient = new ApiClient(config.simulationApiUrl);
-  const pooler = new SimulationPooler(apiClient, config.poolerIntervalMs);
-  pooler.start();
+    return server;
+  };
+
+  const initPooler = () => {
+    const apiClient = new ApiClient(config.simulationApiUrl);
+    return new SimulationPooler(apiClient, config.poolerIntervalMs);
+  };
+
+  server = initServer();
+  pooler = initPooler();
 
   return server;
 };
 
 export const start = async () => {
+  pooler.start();
+  await server.start();
+
   const { host, port } = server.settings;
   Logger.info(`Listening on ${host}:${port}`);
-  await server.start();
 };
 
 init()
