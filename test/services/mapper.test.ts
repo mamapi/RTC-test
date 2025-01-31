@@ -59,61 +59,30 @@ describe("Mapper", () => {
     });
   });
 
-  it.each([
-    {
-      missingKey: "sport1",
-      description: "missing sport mapping",
-    },
-    {
-      missingKey: "competition1",
-      description: "missing competition mapping",
-    },
-    {
-      missingKey: "competitor1",
-      description: "missing home competitor mapping",
-    },
-    {
-      missingKey: "competitor2",
-      description: "missing away competitor mapping",
-    },
-    {
-      missingKey: "status1",
-      description: "missing status mapping",
-    },
-    {
-      missingKey: "period0",
-      description: "missing period mapping",
-    },
-    {
-      missingKey: "period1",
-      description: "missing period mapping",
-    },
-  ])("should throw error when $description", ({ missingKey }) => {
-    const events: RawModel.SportEvent[] = [
-      {
-        id: "event1",
-        sportId: "sport1",
-        competitionId: "competition1",
-        startTime: "1709900432183",
-        homeCompetitorId: "competitor1",
-        awayCompetitorId: "competitor2",
-        status: "status1",
-        scores: [
-          {
-            periodId: "period1",
-            homeScore: "1",
-            awayScore: "2",
-          },
-          {
-            periodId: "period0",
-            homeScore: "3",
-            awayScore: "4",
-          },
-        ],
-      },
-    ];
+  describe("Mapper validation", () => {
+    const testEvent: RawModel.SportEvent = {
+      id: "event1",
+      sportId: "sport1",
+      competitionId: "competition1",
+      startTime: "1709900432183",
+      homeCompetitorId: "competitor1",
+      awayCompetitorId: "competitor2",
+      status: "status1",
+      scores: [
+        {
+          periodId: "period1",
+          homeScore: "1",
+          awayScore: "2",
+        },
+        {
+          periodId: "period0",
+          homeScore: "3",
+          awayScore: "4",
+        },
+      ],
+    };
 
-    const fullMappings: RawModel.MappingDict = {
+    const validMappings: RawModel.MappingDict = {
       competitor1: "Real Madrid",
       competitor2: "Barcelona",
       status1: "LIVE",
@@ -123,8 +92,16 @@ describe("Mapper", () => {
       period1: "PERIOD_1",
     };
 
-    const mappings = Object.fromEntries(Object.entries(fullMappings).filter(([key]) => key !== missingKey));
+    it.each(["sport1", "competition1", "competitor1", "competitor2", "status1", "period0", "period1"])(
+      "should throw error when mapping for %s is missing",
+      (missingKey) => {
+        const mappings = { ...validMappings };
+        delete mappings[missingKey];
 
-    expect(() => mapSportEvents(events, mappings)).toThrow("Cannot map sport events: Missing mappings");
+        expect(() => mapSportEvents([testEvent], mappings)).toThrow(
+          `Cannot map sport events: Missing mapping for ${missingKey}`
+        );
+      }
+    );
   });
 });

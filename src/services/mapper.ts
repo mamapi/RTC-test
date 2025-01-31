@@ -5,14 +5,7 @@ export const mapSportEvents = (events: RawModel.SportEvent[], mappings: RawModel
   Object.fromEntries(events.map((event) => [event.id, mapSportEvent(event, mappings)]));
 
 const mapSportEvent = (event: RawModel.SportEvent, mappings: RawModel.MappingDict): SportEventModel.SportEvent => {
-  if (!mappings[event.status]) throw new Error("Cannot map sport events: Missing mappings");
-  if (!mappings[event.sportId]) throw new Error("Cannot map sport events: Missing mappings");
-  if (!mappings[event.competitionId]) throw new Error("Cannot map sport events: Missing mappings");
-  if (!mappings[event.homeCompetitorId]) throw new Error("Cannot map sport events: Missing mappings");
-  if (!mappings[event.awayCompetitorId]) throw new Error("Cannot map sport events: Missing mappings");
-  event.scores.forEach((score) => {
-    if (!mappings[score.periodId]) throw new Error("Cannot map sport events: Missing mappings");
-  });
+  validateMappings(event, mappings);
 
   const scores = mapScores(event.scores, mappings);
   const competitors = mapCompetitors(event.homeCompetitorId, event.awayCompetitorId, mappings);
@@ -28,6 +21,23 @@ const mapSportEvent = (event: RawModel.SportEvent, mappings: RawModel.MappingDic
   };
 
   return sportEvent;
+};
+
+const validateMappings = (event: RawModel.SportEvent, mappings: RawModel.MappingDict) => {
+  const requiredKeys = [
+    event.status,
+    event.sportId,
+    event.competitionId,
+    event.homeCompetitorId,
+    event.awayCompetitorId,
+    ...event.scores.map((score) => score.periodId),
+  ];
+
+  const missingMapping = requiredKeys.find((key) => !mappings[key]);
+
+  if (missingMapping) {
+    throw new Error(`Cannot map sport events: Missing mapping for ${missingMapping}`);
+  }
 };
 
 const mapScores = (scores: RawModel.PeriodScore[], mappings: RawModel.MappingDict) =>
