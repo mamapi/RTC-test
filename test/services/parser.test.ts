@@ -15,6 +15,15 @@ describe("Parser", () => {
     expect(parsedMappings).toEqual(expectedMappings);
   });
 
+  it.each([
+    { scenario: "empty", input: "" },
+    { scenario: "null", input: null },
+    { scenario: "undefined", input: undefined },
+    { scenario: "whitespace only", input: " " },
+  ])("should throw error when mappings input is $scenario", ({ input }) => {
+    expect(() => parseMappings(input)).toThrow();
+  });
+
   it("should parse the odds correctly", () => {
     const event1 =
       "sportEventId1,sportId1,cometitionId1,1709900432183,homeTeamId1,awayTeamId1,statusId1,periodId1@1:1|periodId2@1:2";
