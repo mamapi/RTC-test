@@ -32,8 +32,21 @@ export const init = async (config: ServerConfig = getConfig()): Promise<Hapi.Ser
     return new SimulationPooler(apiClient, config.poolerIntervalMs);
   };
 
+  const setupShutdown = () => {
+    const gracefulShutdown = async () => {
+      Logger.info("Shutting down server...");
+      await server.stop();
+      pooler.stop();
+      process.exit(0);
+    };
+
+    process.on("SIGINT", gracefulShutdown);
+    process.on("SIGTERM", gracefulShutdown);
+  };
+
   server = initServer();
   pooler = initPooler();
+  setupShutdown();
 
   return server;
 };
