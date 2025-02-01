@@ -165,7 +165,11 @@ class CycleSimulator {
     this.matches.get(eventId)?.start();
   }
 
-  score(eventId: string, team: "home" | "away", points: number) {
+  startNewPeriod(eventId: string) {
+    this.matches.get(eventId)!.startNewPeriod();
+  }
+
+  score(eventId: string, team: "home" | "away", points: number = 1) {
     this.matches.get(eventId)!.score(team, points);
   }
 
