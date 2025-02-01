@@ -38,7 +38,9 @@ const parseEvent = (rawEvent: string, index: number): SportEvent => {
   const fields = rawEvent.split(delimiters.event.fields);
 
   if (![7, 8].includes(fields.length)) {
-    throw new Error(`Cannot parse events: Insufficient number of fields at line ${index + 1}`);
+    throw new Error(
+      `Cannot parse events: Invalid number of fields at line ${index + 1}. Expected 7 or 8, got ${fields.length}`
+    );
   }
 
   const [id, sportId, competitionId, startTime, homeCompetitorId, awayCompetitorId, status, scores] = fields;
