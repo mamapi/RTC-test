@@ -148,7 +148,7 @@ describe("Sport Events Cycle Simulator", () => {
       },
     ]);
 
-    // score Lewandowski to 1-0
+    // Lewandowski scores the opening goal to make it 0-1
     simulator.score(eventId1, "away", 1);
     state = simulator.getCurrentState();
     expect(state).toMatchObject<Partial<RawModel.SportEvent>[]>([
@@ -170,7 +170,7 @@ describe("Sport Events Cycle Simulator", () => {
       },
     ]);
 
-    // score Lewandowski to 2-0
+    // Lewandowski scores a goal to make it 0-2
     simulator.score(eventId1, "away", 1);
     state = simulator.getCurrentState();
     expect(state[0].scores).toMatchObject<Partial<RawModel.PeriodScore>[]>([
@@ -201,7 +201,7 @@ describe("Sport Events Cycle Simulator", () => {
       },
     ]);
 
-    // score Lewandowski to 3-0
+    // Lewandowski scores a hat-trick to make it 0-3
     simulator.score(eventId1, "away");
     state = simulator.getCurrentState();
     expect(state[0].scores).toMatchObject<Partial<RawModel.PeriodScore>[]>([

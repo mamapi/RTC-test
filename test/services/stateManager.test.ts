@@ -1,204 +1,178 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { updateState, geAllEvents, getActiveEvents, clearState } from "../../src/services/stateManager";
 import { RawModel } from "../../src/models";
+import CycleSimulator from "../helpers/cycleSimulator";
 
-interface Cycle {
-  mappings: RawModel.MappingDict;
-  events: {
-    [eventId: string]: {
-      data: Omit<RawModel.SportEvent, "scores">;
-      updates: RawModel.PeriodScore[];
-    };
-  };
-}
+const matchRealVsBarcelonaId = "11";
+const matchBayernVsPSGId = "12";
+const matchliverpoolVsMilanId = "13";
 
-const cycle1: Cycle = {
-  mappings: {
-    event1: "event1",
-    event2: "event2",
-    sport1: "FOOTBALL",
-    competition1: "LALIGA",
-    home1: "Real Madrid",
-    away1: "Barcelona",
-    home2: "Valencia",
-    away2: "Atletico Madrid",
-    status0: "PRE",
-    status1: "LIVE",
-    period0: "CURRENT",
-    period1: "PERIOD_1",
-    period2: "PERIOD_2",
-  },
-  events: {
-    "11": {
-      data: {
-        id: "11",
-        sportId: "sport1",
-        competitionId: "competition1",
-        startTime: "1735690200000",
-        homeCompetitorId: "home1",
-        awayCompetitorId: "away1",
-        status: "status1",
-      },
-      updates: [
-        {
-          periodId: "period0",
-          homeScore: "1",
-          awayScore: "2",
-        },
-        {
-          periodId: "period0",
-          homeScore: "3",
-          awayScore: "4",
-        },
-      ],
-    },
-    "12": {
-      data: {
-        id: "12",
-        sportId: "sport1",
-        competitionId: "competition1",
-        startTime: "1735690200000",
-        homeCompetitorId: "home2",
-        awayCompetitorId: "away2",
-        status: "status0",
-      },
-      updates: [
-        {
-          periodId: "period0",
-          homeScore: "0",
-          awayScore: "0",
-        },
-        {
-          periodId: "period0",
-          homeScore: "0",
-          awayScore: "1",
-        },
-      ],
-    },
-  },
+const matchChicagoVsBostonId = "21";
+const matchLakersVsMiamiId = "22";
+
+const createFootballSimulation = () => {
+  return new CycleSimulator()
+    .withFootballTeam("realMadrid")
+    .withFootballTeam("barcelona")
+    .withFootballTeam("bayernMunich")
+    .withFootballTeam("parisSaintGermain")
+    .withFootballTeam("liverpool")
+    .withFootballTeam("acMilan")
+
+    .withEvent(matchRealVsBarcelonaId, "1735690200000", "football", "championsLeague", "realMadrid", "barcelona")
+    .withEvent(matchBayernVsPSGId, "1735690200000", "football", "championsLeague", "bayernMunich", "parisSaintGermain")
+    .withEvent(matchliverpoolVsMilanId, "1735690200000", "football", "championsLeague", "liverpool", "acMilan");
 };
 
-const cycle2: Cycle = {
-  mappings: {
-    event1: "event1",
-    event2: "event2",
-    sport2: "BASKETBALL",
-    competition2: "NBA",
-    home2: "Lakers",
-    away2: "Warriors",
-    status0: "PRE",
-    status1: "LIVE",
-    period0: "CURRENT",
-    period1: "PERIOD_1",
-    period2: "PERIOD_2",
-  },
-  events: {
-    "21": {
-      data: {
-        id: "21",
-        sportId: "sport2",
-        competitionId: "competition2",
-        startTime: "1735690200000",
-        homeCompetitorId: "home2",
-        awayCompetitorId: "away2",
-        status: "status0",
-      },
-      updates: [
-        {
-          periodId: "period0",
-          homeScore: "3",
-          awayScore: "4",
-        },
-      ],
-    },
-  },
+const createBasketballSimulation = () => {
+  return new CycleSimulator()
+    .withBasketballTeam("chicagoBulls")
+    .withBasketballTeam("bostonCeltics")
+    .withBasketballTeam("laLakers")
+    .withBasketballTeam("miamiHeat")
+    .withEvent(matchChicagoVsBostonId, "1735690200000", "basketball", "nba", "chicagoBulls", "bostonCeltics")
+    .withEvent(matchLakersVsMiamiId, "1735690200000", "basketball", "nba", "laLakers", "miamiHeat");
 };
-
-const getEventUpdate = (cycle: Cycle, eventId: string, updateIndex: number) => ({
-  ...cycle.events[eventId].data,
-  scores: [cycle.events[eventId].updates[updateIndex]],
-});
 
 describe("StateManager", () => {
+  let simulationFootball: CycleSimulator;
+  let simulationBasketball: CycleSimulator;
+
   beforeEach(() => {
+    simulationFootball = createFootballSimulation();
+    simulationBasketball = createBasketballSimulation();
     clearState();
   });
 
   it("should update the state correctly", () => {
-    const { mappings } = cycle1;
+    const mappings = simulationFootball.getMappings();
 
-    // first update
-    const eventUpdate1 = getEventUpdate(cycle1, "11", 0);
-    updateState([eventUpdate1], mappings);
+    // pre-start state
+    const eventsUpdate1 = simulationFootball.getCurrentState();
 
-    const state = geAllEvents();
-    expect(state).toMatchObject({
-      "11": {
-        scores: {
-          CURRENT: {
-            type: "CURRENT",
-            home: "1",
-            away: "2",
-          },
+    updateState(eventsUpdate1, mappings);
+    let state = geAllEvents();
+
+    expect(Object.keys(state).length).toEqual(eventsUpdate1.length);
+    expect(state[matchRealVsBarcelonaId]).toEqual({
+      id: matchRealVsBarcelonaId,
+      sport: "FOOTBALL",
+      competition: "Champions League",
+      startTime: "2025-01-01T00:10:00.000Z",
+      competitors: {
+        HOME: {
+          type: "HOME",
+          name: "Real Madrid",
+        },
+        AWAY: {
+          type: "AWAY",
+          name: "Barcelona",
         },
       },
+      status: "PRE",
+      scores: {},
     });
 
-    // second update
-    const eventUpdate2 = getEventUpdate(cycle1, "11", 1);
-    updateState([eventUpdate2], mappings);
+    // start match of event11
+    simulationFootball.startMatch(matchRealVsBarcelonaId);
+    const eventsUpdate2 = simulationFootball.getCurrentState();
 
-    expect(getActiveEvents()).toMatchObject({
-      "11": {
-        scores: {
-          CURRENT: {
-            type: "CURRENT",
-            home: "3",
-            away: "4",
-          },
-        },
-      },
+    updateState(eventsUpdate2, mappings);
+    state = geAllEvents();
+
+    expect(state[matchRealVsBarcelonaId].status).toEqual("LIVE");
+    expect(state[matchRealVsBarcelonaId].scores).toEqual({
+      CURRENT: { type: "CURRENT", home: "0", away: "0" },
+      PERIOD_1: { type: "PERIOD_1", home: "0", away: "0" },
+    });
+
+    // home scores 1-0
+    simulationFootball.score(matchRealVsBarcelonaId, "home", 1);
+    const eventsUpdate3 = simulationFootball.getCurrentState();
+
+    updateState(eventsUpdate3, mappings);
+    state = geAllEvents();
+
+    expect(state[matchRealVsBarcelonaId].scores).toEqual({
+      CURRENT: { type: "CURRENT", home: "1", away: "0" },
+      PERIOD_1: { type: "PERIOD_1", home: "1", away: "0" },
+    });
+
+    // finish first half
+    simulationFootball.startNewPeriod(matchRealVsBarcelonaId);
+    const eventsUpdate4 = simulationFootball.getCurrentState();
+
+    updateState(eventsUpdate4, mappings);
+    state = geAllEvents();
+
+    expect(state[matchRealVsBarcelonaId].scores).toEqual({
+      CURRENT: { type: "CURRENT", home: "1", away: "0" },
+      PERIOD_1: { type: "PERIOD_1", home: "1", away: "0" },
+      PERIOD_2: { type: "PERIOD_2", home: "0", away: "0" },
+    });
+
+    // away scores 1-1
+    simulationFootball.score(matchRealVsBarcelonaId, "away");
+    const eventsUpdate5 = simulationFootball.getCurrentState();
+
+    updateState(eventsUpdate5, mappings);
+    state = geAllEvents();
+
+    expect(state[matchRealVsBarcelonaId].scores).toEqual({
+      CURRENT: { type: "CURRENT", home: "1", away: "1" },
+      PERIOD_1: { type: "PERIOD_1", home: "1", away: "0" },
+      PERIOD_2: { type: "PERIOD_2", home: "0", away: "1" },
     });
   });
 
-  it("should not return the event from the state if it is not in the updates", () => {
-    const { mappings } = cycle1;
+  it("should mark events as REMOVED when they are no longer in updates", () => {
+    const mappings = simulationFootball.getMappings();
 
-    const event1Update1 = getEventUpdate(cycle1, "11", 0);
-    const event2Update1 = getEventUpdate(cycle1, "12", 0);
+    simulationFootball.startMatch(matchRealVsBarcelonaId);
+    simulationFootball.startMatch(matchBayernVsPSGId);
+    simulationFootball.startMatch(matchliverpoolVsMilanId);
 
-    updateState([event1Update1, event2Update1], mappings);
-    expect(Object.keys(getActiveEvents())).toEqual(["11", "12"]);
+    // initial state - all events are active
+    updateState(simulationFootball.getCurrentState(), mappings);
+    expect(Object.keys(getActiveEvents())).toEqual([
+      matchRealVsBarcelonaId,
+      matchBayernVsPSGId,
+      matchliverpoolVsMilanId,
+    ]);
 
-    updateState([event1Update1], mappings);
-    expect(Object.keys(getActiveEvents())).toEqual(["11"]);
-    expect(Object.keys(geAllEvents())).toEqual(["11", "12"]);
-    expect(geAllEvents()["12"].status).toEqual("REMOVED");
+    // finish one event12
+    simulationFootball.endMatch(matchBayernVsPSGId);
+    updateState(simulationFootball.getCurrentState(), mappings);
+
+    // verify state after ending one event
+    const expectedActiveEvents = [matchRealVsBarcelonaId, matchliverpoolVsMilanId];
+    expect(Object.keys(getActiveEvents())).toEqual(expectedActiveEvents);
+
+    // verify ended event is still in state but marked as REMOVED
+    expect(Object.keys(geAllEvents())).toEqual([matchRealVsBarcelonaId, matchBayernVsPSGId, matchliverpoolVsMilanId]);
+    expect(geAllEvents()[matchBayernVsPSGId].status).toEqual("REMOVED");
   });
 
   it("should clear all events when clearState is called", () => {
-    const { mappings } = cycle1;
+    const mappings = simulationFootball.getMappings();
 
-    const eventUpdate1 = getEventUpdate(cycle1, "11", 0);
-    updateState([eventUpdate1], mappings);
-    expect(Object.keys(geAllEvents())).toEqual(["11"]);
+    simulationFootball.startMatch(matchRealVsBarcelonaId);
+    simulationFootball.startMatch(matchBayernVsPSGId);
+    simulationFootball.startMatch(matchliverpoolVsMilanId);
+
+    updateState(simulationFootball.getCurrentState(), mappings);
+    expect(Object.keys(geAllEvents())).toEqual([matchRealVsBarcelonaId, matchBayernVsPSGId, matchliverpoolVsMilanId]);
 
     clearState();
     expect(Object.keys(geAllEvents())).toEqual([]);
   });
 
   it("should clear the state when mappings change", () => {
-    const event11Update0 = getEventUpdate(cycle1, "11", 0);
-    updateState([event11Update0], cycle1.mappings);
-    expect(Object.keys(geAllEvents())).toEqual(["11"]);
-
-    const event11Update1 = getEventUpdate(cycle1, "11", 1);
-    updateState([event11Update1], cycle1.mappings);
-    expect(Object.keys(geAllEvents())).toEqual(["11"]);
+    updateState(simulationFootball.getCurrentState(), simulationFootball.getMappings());
+    expect(Object.keys(geAllEvents())).toEqual([matchRealVsBarcelonaId, matchBayernVsPSGId, matchliverpoolVsMilanId]);
 
     // switch to new mappings - should clear previous state
-    const event21Update0 = getEventUpdate(cycle2, "21", 0);
-    updateState([event21Update0], cycle2.mappings);
-    expect(Object.keys(geAllEvents())).toEqual(["21"]);
+    updateState(simulationBasketball.getCurrentState(), simulationBasketball.getMappings());
+    expect(Object.keys(geAllEvents())).toEqual([matchChicagoVsBostonId, matchLakersVsMiamiId]);
   });
 });
