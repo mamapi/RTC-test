@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import CycleSimulator from "./cycleSimulator";
+import { RawModel } from "../../src/models";
 
 describe("Sport Events Cycle Simulator", () => {
   it("ctor should initialize with default mappings", () => {
@@ -45,5 +46,44 @@ describe("Sport Events Cycle Simulator", () => {
       chicagoBulls: "Chicago Bulls",
       miamiHeat: "Miami Heat",
     });
+  });
+
+  it("should simulate single competition cycle", () => {
+    const simulator = new CycleSimulator();
+    simulator
+      .withFootballTeam("barcelona")
+      .withFootballTeam("realMadrid")
+      .withFootballTeam("bayernMunich")
+      .withFootballTeam("legiaWarsaw");
+
+    simulator
+      .withEvent("1", "football", "championsLeague", "realMadrid", "barcelona")
+      .withEvent("2", "football", "championsLeague", "legiaWarsaw", "bayernMunich");
+
+    const state = simulator.getCurrentEventsState();
+    expect(state).toMatchObject<RawModel.SportEvent[]>([
+      {
+        id: "1",
+        sportId: "football",
+        competitionId: "championsLeague",
+        status: "PRE",
+        homeCompetitorId: "realMadrid",
+        awayCompetitorId: "barcelona",
+        startTime: "0",
+        scores: [],
+      },
+      {
+        id: "2",
+        sportId: "football",
+        competitionId: "championsLeague",
+        status: "PRE",
+        homeCompetitorId: "legiaWarsaw",
+        awayCompetitorId: "bayernMunich",
+        startTime: "0",
+        scores: [],
+      },
+    ]);
+
+    // simulator.startMatch();
   });
 });
