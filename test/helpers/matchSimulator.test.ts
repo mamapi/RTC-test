@@ -12,4 +12,14 @@ describe("Match Simulator", () => {
     match.start();
     expect(match.getStatus()).toBe("IN");
   });
+
+  it("should simulate score", () => {
+    const match = new Match();
+    
+    match.start();
+    match.score("home");
+    
+    expect(match.getStatus()).toBe("IN");
+    expect(match.getCurrentScore()).toBe({ home: 1, away: 0 });
+  });
 });
