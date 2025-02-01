@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import SimulationPooler from "../../src/services/simulationPooler";
+import ApiFetcher from "../../src/services/apiFetcher";
 import ApiClient from "../../src/services/apiClient";
 
-describe("SimulationPooler", () => {
+describe("ApiFetcher", () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -13,21 +13,21 @@ describe("SimulationPooler", () => {
 
   it("should create instance with specified interval", () => {
     const apiClient = new ApiClient("http://localhost:3000");
-    const pooler = new SimulationPooler(apiClient, 1000);
-    expect(pooler).toBeInstanceOf(SimulationPooler);
+    const fetcher = new ApiFetcher(apiClient, 1000);
+    expect(fetcher).toBeInstanceOf(ApiFetcher);
   });
 
   it("should not execute more ticks after stop is called", () => {
     const apiClient = new ApiClient("http://localhost:3000");
-    const pooler = new SimulationPooler(apiClient, 1000);
-    const onTickSpy = vi.spyOn(pooler as any, "onTick");
+    const fetcher = new ApiFetcher(apiClient, 1000);
+    const onTickSpy = vi.spyOn(fetcher as any, "onTick");
     const expectedCalls = 2;
 
-    pooler.start();
+    fetcher.start();
     vi.advanceTimersByTime(1000 * expectedCalls);
     expect(onTickSpy).toHaveBeenCalledTimes(expectedCalls);
 
-    pooler.stop();
+    fetcher.stop();
     vi.advanceTimersByTime(1000);
 
     expect(onTickSpy).toHaveBeenCalledTimes(expectedCalls);

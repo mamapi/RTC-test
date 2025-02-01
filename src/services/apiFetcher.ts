@@ -3,7 +3,7 @@ import Logger from "./logger";
 import { parseMappings, parseEvents } from "./parser";
 import { updateState } from "./stateManager";
 
-class SimulationPooler {
+class ApiFetcher {
   private intervalId: NodeJS.Timeout | null = null;
 
   constructor(private readonly apiClient: ApiClient, private readonly intervalMs: number) {}
@@ -23,7 +23,7 @@ class SimulationPooler {
       updateState(events, mappings);
       Logger.debug(`Updated state with ${Object.keys(events).length} events`);
     } catch (error) {
-      Logger.error(`Error in simulation pooler: ${error}`);
+      Logger.error(`Error in API fetcher: ${error}`);
     }
   }
 
@@ -35,4 +35,4 @@ class SimulationPooler {
   }
 }
 
-export default SimulationPooler;
+export default ApiFetcher;

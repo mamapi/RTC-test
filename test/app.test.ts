@@ -18,7 +18,7 @@ describe("App tests", () => {
   it("app initializes correctly", async () => {
     expect(app).toBeDefined();
     expect(app.server).toBeDefined();
-    expect(app.pooler).toBeDefined();
+    expect(app.fetcher).toBeDefined();
     expect(app.server.settings.port).toBe(4000);
     expect(app.server.settings.host).toBe("localhost");
   });

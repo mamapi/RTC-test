@@ -2,12 +2,12 @@ import Hapi from "@hapi/hapi";
 import Logger from "./services/logger";
 import clientRoutes from "./routes/client";
 import ApiClient from "./services/apiClient";
-import SimulationPooler from "./services/simulationPooler";
+import ApiFetcher from "./services/apiFetcher";
 import { ServerConfig, getConfig } from "./config";
 
 export type AppContext = {
   server: Hapi.Server;
-  pooler: SimulationPooler;
+  fetcher: ApiFetcher;
 };
 
 export const init = async (config: ServerConfig = getConfig()): Promise<AppContext> => {
@@ -29,16 +29,16 @@ export const init = async (config: ServerConfig = getConfig()): Promise<AppConte
     return server;
   };
 
-  const initPooler = () => {
+  const initFetcher = () => {
     const apiClient = new ApiClient(config.simulationApiUrl);
-    return new SimulationPooler(apiClient, config.poolerIntervalMs);
+    return new ApiFetcher(apiClient, config.fetcherIntervalMs);
   };
 
-  const setupShutdown = (server: Hapi.Server, pooler: SimulationPooler) => {
+  const setupShutdown = (server: Hapi.Server, fetcher: ApiFetcher) => {
     const gracefulShutdown = async () => {
       Logger.info("Shutting down server...");
       await server.stop();
-      pooler.stop();
+      fetcher.stop();
       process.exit(0);
     };
 
@@ -47,16 +47,16 @@ export const init = async (config: ServerConfig = getConfig()): Promise<AppConte
   };
 
   const server = initServer();
-  const pooler = initPooler();
-  setupShutdown(server, pooler);
+  const fetcher = initFetcher();
+  setupShutdown(server, fetcher);
 
-  return { server, pooler };
+  return { server, fetcher };
 };
 
 export const start = async (app: AppContext) => {
-  const { server, pooler } = app;
+  const { server, fetcher } = app;
 
-  pooler.start();
+  fetcher.start();
   await server.start();
 
   const { host, port } = server.settings;
@@ -64,7 +64,7 @@ export const start = async (app: AppContext) => {
 };
 
 export const stop = async (app: AppContext) => {
-  const { server, pooler } = app;
+  const { server, fetcher } = app;
   await server.stop();
-  pooler.stop();
+  fetcher.stop();
 };
