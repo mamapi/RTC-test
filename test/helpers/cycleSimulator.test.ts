@@ -127,5 +127,44 @@ describe("Sport Events Cycle Simulator", () => {
         ],
       },
     ]);
+
+    // score Lewandowski to 1-0
+    simulator.score(eventId1, "away", 1);
+    state = simulator.getCurrentState();
+    expect(state).toMatchObject<Partial<RawModel.SportEvent>[]>([
+      {
+        id: eventId1,
+        status: "status_live",
+        scores: [
+          { periodId: "period_current", homeScore: "0", awayScore: "1" },
+          { periodId: "period_1", homeScore: "0", awayScore: "1" },
+        ],
+      },
+      {
+        id: eventId2,
+        status: "status_live",
+        scores: [
+          { periodId: "period_current", homeScore: "0", awayScore: "0" },
+          { periodId: "period_1", homeScore: "0", awayScore: "0" },
+        ],
+      },
+    ]);
+
+    // score Lewandowski to 2-0
+    simulator.score(eventId1, "away", 1);
+    state = simulator.getCurrentState();
+    expect(state[0].scores).toMatchObject<Partial<RawModel.PeriodScore>[]>([
+      {
+        periodId: "period_current",
+        homeScore: "0",
+        awayScore: "2",
+      },
+      {
+        periodId: "period_1",
+        homeScore: "0",
+        awayScore: "2",
+      },
+    ]);
+
   });
 });

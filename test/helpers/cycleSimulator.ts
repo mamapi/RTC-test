@@ -164,6 +164,11 @@ class CycleSimulator {
     }
     this.matches.get(eventId)?.start();
   }
+
+  score(eventId: string, team: "home" | "away", points: number) {
+    this.matches.get(eventId)!.score(team, points);
+  }
+
 }
 
 export default CycleSimulator;
