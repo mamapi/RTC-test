@@ -18,8 +18,8 @@ describe("Match Simulator", () => {
     
     match.start();
     match.score("home");
-    
+
     expect(match.getStatus()).toBe("IN");
-    expect(match.getCurrentScore()).toBe({ home: 1, away: 0 });
+    expect(match.getCurrentScore()).toStrictEqual({ home: 1, away: 0 });
   });
 });
