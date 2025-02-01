@@ -41,6 +41,10 @@ class Match {
     this.currentPeriod++;
     this.scores[this.currentPeriod] = { home: 0, away: 0 };
   }
+
+  endMatch() {
+    this.status = "POST";
+  }
 }
 
 export default Match;
