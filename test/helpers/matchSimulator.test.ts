@@ -13,7 +13,7 @@ describe("Match Simulator", () => {
     expect(match.getStatus()).toBe("IN");
   });
 
-  it("should simulate score", () => {
+  it("should simulate match", () => {
     const match = new Match();
     match.start();
 
@@ -38,6 +38,14 @@ describe("Match Simulator", () => {
     });
 
     match.score("home");
+    expect(match.getCurrentScore()).toStrictEqual({ home: 4, away: 2 });
+    expect(match.getScores()).toStrictEqual({
+      1: { home: 3, away: 2 },
+      2: { home: 1, away: 0 },
+    });
+
+    match.endMatch();
+    expect(match.getStatus()).toBe("POST");
     expect(match.getCurrentScore()).toStrictEqual({ home: 4, away: 2 });
     expect(match.getScores()).toStrictEqual({
       1: { home: 3, away: 2 },
