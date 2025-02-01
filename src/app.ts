@@ -5,10 +5,12 @@ import ApiClient from "./services/apiClient";
 import SimulationPooler from "./services/simulationPooler";
 import { ServerConfig, getConfig } from "./config";
 
-export let server: Hapi.Server;
-export let pooler: SimulationPooler;
+export type AppContext = {
+  server: Hapi.Server;
+  pooler: SimulationPooler;
+};
 
-export const init = async (config: ServerConfig = getConfig()): Promise<Hapi.Server> => {
+export const init = async (config: ServerConfig = getConfig()): Promise<AppContext> => {
   Logger.setLogLevel(config.logLevel);
 
   const initServer = () => {
@@ -32,7 +34,7 @@ export const init = async (config: ServerConfig = getConfig()): Promise<Hapi.Ser
     return new SimulationPooler(apiClient, config.poolerIntervalMs);
   };
 
-  const setupShutdown = () => {
+  const setupShutdown = (server: Hapi.Server, pooler: SimulationPooler) => {
     const gracefulShutdown = async () => {
       Logger.info("Shutting down server...");
       await server.stop();
@@ -44,14 +46,16 @@ export const init = async (config: ServerConfig = getConfig()): Promise<Hapi.Ser
     process.on("SIGTERM", gracefulShutdown);
   };
 
-  server = initServer();
-  pooler = initPooler();
-  setupShutdown();
+  const server = initServer();
+  const pooler = initPooler();
+  setupShutdown(server, pooler);
 
-  return server;
+  return { server, pooler };
 };
 
-export const start = async () => {
+export const start = async (app: AppContext) => {
+  const { server, pooler } = app;
+
   pooler.start();
   await server.start();
 
@@ -59,6 +63,8 @@ export const start = async () => {
   Logger.info(`Listening on ${host}:${port}`);
 };
 
-init()
-  .then(start)
-  .catch((err) => console.error("Error while starting server", err));
+export const stop = async (app: AppContext) => {
+  const { server, pooler } = app;
+  await server.stop();
+  pooler.stop();
+};

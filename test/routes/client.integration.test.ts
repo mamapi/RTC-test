@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { init } from "../../src/app";
-import { Server } from "@hapi/hapi";
+import * as App from "../../src/app";
 import { getActiveEvents } from "../../src/services/stateManager";
 import { SportEventModel } from "../../src/models";
 
@@ -9,14 +8,14 @@ vi.mock("../../src/services/stateManager", () => ({
 }));
 
 describe("GET /client/state", () => {
-  let server: Server;
+  let app: App.AppContext;
 
   beforeEach(async () => {
-    server = await init();
+    app = await App.init();
   });
 
   afterEach(async () => {
-    await server.stop();
+    await App.stop(app);
     vi.clearAllMocks();
   });
 
@@ -49,7 +48,7 @@ describe("GET /client/state", () => {
     };
     vi.mocked(getActiveEvents).mockReturnValue(mockEvents);
 
-    const response = await server.inject({
+    const response = await app.server.inject({
       method: "GET",
       url: "/client/state",
     });
@@ -63,7 +62,7 @@ describe("GET /client/state", () => {
       throw new Error("Test error");
     });
 
-    const response = await server.inject({
+    const response = await app.server.inject({
       method: "GET",
       url: "/client/state",
     });

@@ -1,22 +1,26 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { server, init } from "../src/app";
+import * as App from "../src/app";
 import { updateState } from "../src/services/stateManager";
 import { RawModel, SportEventModel } from "../src/models";
 import { getConfig } from "../src/config";
 
-describe("Server tests", () => {
+describe("App tests", () => {
+  let app: App.AppContext;
+
   beforeEach(async () => {
-    await init();
+    app = await App.init();
   });
 
   afterEach(async () => {
-    await server.stop();
+    await App.stop(app);
   });
 
-  it("server initializes correctly", async () => {
-    expect(server).toBeDefined();
-    expect(server.settings.port).toBe(4000);
-    expect(server.settings.host).toBe("localhost");
+  it("app initializes correctly", async () => {
+    expect(app).toBeDefined();
+    expect(app.server).toBeDefined();
+    expect(app.pooler).toBeDefined();
+    expect(app.server.settings.port).toBe(4000);
+    expect(app.server.settings.host).toBe("localhost");
   });
 
   it("should initialize server with custom port", async () => {
@@ -26,13 +30,13 @@ describe("Server tests", () => {
       apiPort: customPort,
     };
 
-    const newServer = await init(mockConfig);
-
-    expect(newServer.settings.port).toBe(customPort);
-    await server.stop();
+    const newApp  = await App.init(mockConfig);
+    expect(newApp.server.settings.port).toBe(customPort);
+    await App.stop(newApp);
   });
 
   it("should return 404 when accessing a non-existent route", async () => {
+    const { server } = app
     const res = await server.inject({
       method: "GET",
       url: "/non-existent-route",
@@ -42,6 +46,7 @@ describe("Server tests", () => {
   });
 
   it("should return empty state initially", async () => {
+    const { server } = app;
     const res = await server.inject({
       method: "GET",
       url: "/client/state",
@@ -76,7 +81,7 @@ describe("Server tests", () => {
     };
 
     updateState(events, mappings);
-    const res = await server.inject({
+    const res = await app.server.inject({
       method: "GET",
       url: "/client/state",
     });

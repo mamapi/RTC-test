@@ -2,9 +2,9 @@
   "name": "mysterious-crawler",
   "version": "1.0.0",
   "description": "SR",
-  "main": "app.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node dist/app.js",
+    "start": "node dist/index.js",
     "build": "tsc --project tsconfig.build.json",
     "test": "vitest run --coverage",
     "test:watch": "vitest"
