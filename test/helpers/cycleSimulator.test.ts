@@ -33,6 +33,11 @@ describe("Sport Events Cycle Simulator", () => {
     });
   });
 
+  it("should throw error when event is not found", () => {
+    const simulator = new CycleSimulator();
+    expect(() => simulator.findEvent("non-existent-event-id")).toThrow("Event with id non-existent-event-id not found");
+  });
+
   it("should return mappings with basketball teams", () => {
     const simulator = new CycleSimulator();
     simulator
