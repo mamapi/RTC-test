@@ -37,7 +37,9 @@ export const parseEvents = (rawEvents?: string | null): SportEvent[] => {
 const parseEvent = (rawEvent: string, index: number): SportEvent => {
   const fields = rawEvent.split(delimiters.event.fields);
 
-  if (fields.length < 7) throw new Error(`Cannot parse events: Insufficient number of fields at line ${index + 1}`);
+  if (![7, 8].includes(fields.length)) {
+    throw new Error(`Cannot parse events: Insufficient number of fields at line ${index + 1}`);
+  }
 
   const [id, sportId, competitionId, startTime, homeCompetitorId, awayCompetitorId, status, scores] = fields;
 
