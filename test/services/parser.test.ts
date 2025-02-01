@@ -102,6 +102,10 @@ describe("Parser", () => {
       input: "sportEventId1,sportId1,competitionId1,1709900432183,homeTeamId1,awayTeamId1,statusId1\nsportEventId1,sportId1,,homeTeamId1,",
       failingLine: 2,
     },
+    {
+      input: "sportEventId1,sportId1,competitionId1,1709900432183,homeTeamId1,awayTeamId1,statusId1,periodId1@1:1|periodId2@1:2,,,",
+      failingLine: 1,
+    },
   ])("should throw error when event has insufficient fields at line $failingLine", ({ input, failingLine }) => {
     expect(() => parseEvents(input)).toThrow(
       `Cannot parse events: Insufficient number of fields at line ${failingLine}`
