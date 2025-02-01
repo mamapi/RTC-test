@@ -189,6 +189,12 @@ class CycleSimulator {
     match.endMatch();
   }
 
+  removeEvent(eventId: string) {
+    this.findEvent(eventId);
+    this.events = this.events.filter((event) => event.id !== eventId);
+    this.matches.delete(eventId);
+  }
+
   findEvent(eventId: string) {
     const event = this.events.find((event) => event.id === eventId);
     if (!event) {
