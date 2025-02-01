@@ -107,7 +107,6 @@ class CycleSimulator {
     homeKey: S extends "football" ? keyof typeof FOOTBALL_TEAMS : keyof typeof BASKETBALL_TEAMS,
     awayKey: S extends "football" ? keyof typeof FOOTBALL_TEAMS : keyof typeof BASKETBALL_TEAMS
   ) {
-
     // add competition to mappings
     const sport = SPORTS[sportKey];
     this.mappings = {
@@ -167,26 +166,40 @@ class CycleSimulator {
     });
   }
 
-  startMatch(eventId: string) {
+  startMatch(eventId: string | string[]) {
+    const events = Array.isArray(eventId) ? eventId : [eventId];
+    events.forEach((eventId) => {
+      const { match } = this.findEvent(eventId);
+      match.start();
+    });
+  }
+
+  startNewPeriod(eventId: string) {
+    const { match } = this.findEvent(eventId);
+    match.startNewPeriod();
+  }
+
+  score(eventId: string, team: "home" | "away", points: number = 1) {
+    const { match } = this.findEvent(eventId);
+    match.score(team, points);
+  }
+
+  endMatch(eventId: string) {
+    const { match } = this.findEvent(eventId);
+    match.endMatch();
+  }
+
+  findEvent(eventId: string) {
     const event = this.events.find((event) => event.id === eventId);
     if (!event) {
       throw new Error(`Event with id ${eventId} not found`);
     }
-    this.matches.get(eventId)?.start();
+    const match = this.matches.get(eventId);
+    if (!match) {
+      throw new Error(`Match for event ${eventId} not initialized`);
+    }
+    return { event, match };
   }
-
-  startNewPeriod(eventId: string) {
-    this.matches.get(eventId)!.startNewPeriod();
-  }
-
-  score(eventId: string, team: "home" | "away", points: number = 1) {
-    this.matches.get(eventId)!.score(team, points);
-  }
-
-  endMatch(eventId: string) {
-    this.matches.get(eventId)!.endMatch();
-  }
-
 }
 
 export default CycleSimulator;
