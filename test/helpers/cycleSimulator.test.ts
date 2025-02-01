@@ -49,6 +49,8 @@ describe("Sport Events Cycle Simulator", () => {
   });
 
   it("should simulate single competition cycle", () => {
+    const eventId1 = "1";
+    const eventId2 = "2";
     const simulator = new CycleSimulator();
     simulator
       .withFootballTeam("barcelona")
@@ -57,13 +59,14 @@ describe("Sport Events Cycle Simulator", () => {
       .withFootballTeam("legiaWarsaw");
 
     simulator
-      .withEvent("1", "0", "football", "championsLeague", "realMadrid", "barcelona")
-      .withEvent("2", "0", "football", "championsLeague", "legiaWarsaw", "bayernMunich");
+      .withEvent(eventId1, "0", "football", "championsLeague", "realMadrid", "barcelona")
+      .withEvent(eventId2, "0", "football", "championsLeague", "legiaWarsaw", "bayernMunich");
 
+    // pre-match state
     let state = simulator.getCurrentState();
     expect(state).toMatchObject<RawModel.SportEvent[]>([
       {
-        id: "1",
+        id: eventId1,
         sportId: "football",
         competitionId: "championsLeague",
         status: "status_pre",
@@ -73,7 +76,7 @@ describe("Sport Events Cycle Simulator", () => {
         scores: [],
       },
       {
-        id: "2",
+        id: eventId2,
         sportId: "football",
         competitionId: "championsLeague",
         status: "status_pre",
@@ -84,17 +87,44 @@ describe("Sport Events Cycle Simulator", () => {
       },
     ]);
 
-    simulator.startMatch("1");
-
+    // start realMadrid vs barcelona match
+    simulator.startMatch(eventId1);
     state = simulator.getCurrentState();
     expect(state).toMatchObject<Partial<RawModel.SportEvent>[]>([
       {
-        id: "1",
+        id: eventId1,
         status: "status_live",
+        scores: [
+          { periodId: "period_current", homeScore: "0", awayScore: "0" },
+          { periodId: "period_1", homeScore: "0", awayScore: "0" },
+        ],
       },
       {
-        id: "2",
+        id: eventId2,
         status: "status_pre",
+        scores: [],
+      },
+    ]);
+
+    // start legiaWarsaw vs bayernMunich match
+    simulator.startMatch(eventId2);
+    state = simulator.getCurrentState();
+    expect(state).toMatchObject<Partial<RawModel.SportEvent>[]>([
+      {
+        id: eventId1,
+        status: "status_live",
+        scores: [
+          { periodId: "period_current", homeScore: "0", awayScore: "0" },
+          { periodId: "period_1", homeScore: "0", awayScore: "0" },
+        ],
+      },
+      {
+        id: eventId2,
+        status: "status_live",
+        scores: [
+          { periodId: "period_current", homeScore: "0", awayScore: "0" },
+          { periodId: "period_1", homeScore: "0", awayScore: "0" },
+        ],
       },
     ]);
   });

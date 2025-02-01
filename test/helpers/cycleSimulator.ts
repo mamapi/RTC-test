@@ -125,6 +125,25 @@ class CycleSimulator {
     return this.events.map((event) => {
       const match = this.matches.get(event.id)!;
       const status = MATCH_STATUS_MAPPING[match.getStatus()];
+
+      const scores: RawModel.PeriodScore[] = [];
+
+      if (match.getStatus() !== "PRE") {
+        scores.push({
+          periodId: "period_current",
+          homeScore: String(match.getCurrentScore().home),
+          awayScore: String(match.getCurrentScore().away),
+        });
+      }
+
+      scores.push(
+        ...Object.entries(match.getScores()).map(([period, { home, away }]) => ({
+          periodId: `period_${period}`,
+          homeScore: String(home),
+          awayScore: String(away),
+        }))
+      );
+
       return {
         id: event.id,
         sportId: event.sportId,
@@ -133,7 +152,7 @@ class CycleSimulator {
         homeCompetitorId: event.homeCompetitorId,
         awayCompetitorId: event.awayCompetitorId,
         startTime: event.startTime,
-        scores: event.scores,
+        scores,
       };
     });
   }
