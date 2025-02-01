@@ -21,6 +21,15 @@ const FOOTBALL_TEAMS = {
   legiaWarsaw: "Legia Warsaw",
 } as const;
 
+const BASKETBALL_TEAMS = {
+  laLakers: "Los Angeles Lakers",
+  bostonCeltics: "Boston Celtics",
+  chicagoBulls: "Chicago Bulls",
+  philadelphia76ers: "Philadelphia 76ers",
+  miamiHeat: "Miami Heat",
+  denverNuggets: "Denver Nuggets",
+} as const;
+
 class CycleSimulator {
   private mappings: RawModel.MappingDict;
 
@@ -37,6 +46,15 @@ class CycleSimulator {
       ...this.mappings,
       football: "FOOTBALL",
       [teamKey]: FOOTBALL_TEAMS[teamKey],
+    };
+    return this;
+  }
+
+  withBasketballTeam(teamKey: keyof typeof BASKETBALL_TEAMS) {
+    this.mappings = {
+      ...this.mappings,
+      basketball: "BASKETBALL",
+      [teamKey]: BASKETBALL_TEAMS[teamKey],
     };
     return this;
   }
