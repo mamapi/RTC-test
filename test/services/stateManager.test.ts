@@ -141,7 +141,7 @@ describe("StateManager", () => {
     ]);
 
     // finish one event12
-    simulationFootball.endMatch(matchBayernVsPSGId);
+    simulationFootball.removeEvent(matchBayernVsPSGId);
     updateState(simulationFootball.getCurrentState(), mappings);
 
     // verify state after ending one event
