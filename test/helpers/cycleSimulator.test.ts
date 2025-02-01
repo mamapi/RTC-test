@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import CycleSimulator from "./cycleSimulator";
 
 describe("Sport Events Cycle Simulator", () => {
   it("ctor should initialize with default mappings", () => {
