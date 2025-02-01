@@ -98,8 +98,6 @@ class CycleSimulator {
     homeKey: S extends "football" ? keyof typeof FOOTBALL_TEAMS : keyof typeof BASKETBALL_TEAMS,
     awayKey: S extends "football" ? keyof typeof FOOTBALL_TEAMS : keyof typeof BASKETBALL_TEAMS
   ) {
-    const sport = SPORTS[sportKey];
-
     this.events.push({
       id: eventId,
       sportId: sportKey,
@@ -115,28 +113,18 @@ class CycleSimulator {
   }
 
   getCurrentState() {
-    return [
-      {
-        id: "1",
-        sportId: "football",
-        competitionId: "championsLeague",
-        status: "PRE",
-        homeCompetitorId: "realMadrid",
-        awayCompetitorId: "barcelona",
-        startTime: "0",
-        scores: [],
-      },
-      {
-        id: "2",
-        sportId: "football",
-        competitionId: "championsLeague",
-        status: "PRE",
-        homeCompetitorId: "legiaWarsaw",
-        awayCompetitorId: "bayernMunich",
-        startTime: "0",
-        scores: [],
-      },
-    ];
+    return this.events.map((event) => {
+      return {
+        id: event.id,
+        sportId: event.sportId,
+        competitionId: event.competitionId,
+        status: this.mappings[event.status],
+        homeCompetitorId: event.homeCompetitorId,
+        awayCompetitorId: event.awayCompetitorId,
+        startTime: event.startTime,
+        scores: event.scores,
+      };
+    });
   }
 }
 
