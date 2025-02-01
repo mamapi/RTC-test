@@ -107,6 +107,14 @@ class CycleSimulator {
     homeKey: S extends "football" ? keyof typeof FOOTBALL_TEAMS : keyof typeof BASKETBALL_TEAMS,
     awayKey: S extends "football" ? keyof typeof FOOTBALL_TEAMS : keyof typeof BASKETBALL_TEAMS
   ) {
+
+    // add competition to mappings
+    const sport = SPORTS[sportKey];
+    this.mappings = {
+      ...this.mappings,
+      [competitionKey]: (sport.competitions as any)[competitionKey],
+    };
+
     this.events.push({
       id: eventId,
       sportId: sportKey,
