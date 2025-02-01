@@ -18,8 +18,8 @@ class Match {
     return this.status;
   }
 
-  score(team: Team) {
-    this.currentScore[team]++;
+  score(team: Team, points: number = 1) {
+    this.currentScore[team] += points;
   }
 
   getCurrentScore() {

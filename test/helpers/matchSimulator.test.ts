@@ -15,11 +15,16 @@ describe("Match Simulator", () => {
 
   it("should simulate score", () => {
     const match = new Match();
-    
     match.start();
+    
     match.score("home");
-
     expect(match.getStatus()).toBe("IN");
     expect(match.getCurrentScore()).toStrictEqual({ home: 1, away: 0 });
+
+    match.score("home", 2);
+    expect(match.getCurrentScore()).toStrictEqual({ home: 3, away: 0 });
+
+    match.score("away", 2);
+    expect(match.getCurrentScore()).toStrictEqual({ home: 3, away: 2 });
   });
 });
