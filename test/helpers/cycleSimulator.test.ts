@@ -60,13 +60,13 @@ describe("Sport Events Cycle Simulator", () => {
       .withEvent("1", "0", "football", "championsLeague", "realMadrid", "barcelona")
       .withEvent("2", "0", "football", "championsLeague", "legiaWarsaw", "bayernMunich");
 
-    const state = simulator.getCurrentState();
+    let state = simulator.getCurrentState();
     expect(state).toMatchObject<RawModel.SportEvent[]>([
       {
         id: "1",
         sportId: "football",
         competitionId: "championsLeague",
-        status: "PRE",
+        status: "status_pre",
         homeCompetitorId: "realMadrid",
         awayCompetitorId: "barcelona",
         startTime: "0",
@@ -76,7 +76,7 @@ describe("Sport Events Cycle Simulator", () => {
         id: "2",
         sportId: "football",
         competitionId: "championsLeague",
-        status: "PRE",
+        status: "status_pre",
         homeCompetitorId: "legiaWarsaw",
         awayCompetitorId: "bayernMunich",
         startTime: "0",
@@ -84,6 +84,18 @@ describe("Sport Events Cycle Simulator", () => {
       },
     ]);
 
-    // simulator.startMatch();
+    simulator.startMatch("1");
+
+    state = simulator.getCurrentState();
+    expect(state).toMatchObject<Partial<RawModel.SportEvent>[]>([
+      {
+        id: "1",
+        status: "status_live",
+      },
+      {
+        id: "2",
+        status: "status_pre",
+      },
+    ]);
   });
 });

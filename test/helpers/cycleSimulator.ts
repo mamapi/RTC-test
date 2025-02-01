@@ -1,5 +1,5 @@
-import { RawModel, SportEventModel } from "../../src/models";
-import { PeriodType } from "../../src/models/sportEventModel";
+import { RawModel } from "../../src/models";
+import Match from "./matchSimulator";
 
 const DEFAULT_MAPPINGS = {
   status_pre: "PRE",
@@ -59,13 +59,20 @@ const SPORTS = {
   },
 } as const;
 
+const MATCH_STATUS_MAPPING = {
+  PRE: "status_pre",
+  IN: "status_live",
+} as const;
+
 class CycleSimulator {
   private mappings: RawModel.MappingDict;
   private events: RawModel.SportEvent[];
+  private matches: Map<string, Match>;
 
   constructor() {
     this.mappings = DEFAULT_MAPPINGS;
     this.events = [];
+    this.matches = new Map();
   }
 
   getMappings() {
@@ -109,22 +116,34 @@ class CycleSimulator {
       awayCompetitorId: awayKey,
     });
 
+    this.matches.set(eventId, new Match());
+
     return this;
   }
 
   getCurrentState() {
     return this.events.map((event) => {
+      const match = this.matches.get(event.id)!;
+      const status = MATCH_STATUS_MAPPING[match.getStatus()];
       return {
         id: event.id,
         sportId: event.sportId,
         competitionId: event.competitionId,
-        status: this.mappings[event.status],
+        status,
         homeCompetitorId: event.homeCompetitorId,
         awayCompetitorId: event.awayCompetitorId,
         startTime: event.startTime,
         scores: event.scores,
       };
     });
+  }
+
+  startMatch(eventId: string) {
+    const event = this.events.find((event) => event.id === eventId);
+    if (!event) {
+      throw new Error(`Event with id ${eventId} not found`);
+    }
+    this.matches.get(eventId)?.start();
   }
 }
 
