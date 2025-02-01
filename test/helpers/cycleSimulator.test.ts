@@ -14,4 +14,13 @@ describe("Sport Events Cycle Simulator", () => {
       period_4: "PERIOD_4",
     });
   });
+
+  it("should return mappings with football teams", () => {
+    const simulator = new CycleSimulator();
+    simulator.withFootballTeam("barcelona");
+    expect(simulator.getMappings()).toMatchObject({
+      football: "FOOTBALL",
+      barcelona: "Barcelona",
+    });
+  });
 });
