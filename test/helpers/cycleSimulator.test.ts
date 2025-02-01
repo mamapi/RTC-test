@@ -57,10 +57,10 @@ describe("Sport Events Cycle Simulator", () => {
       .withFootballTeam("legiaWarsaw");
 
     simulator
-      .withEvent("1", "football", "championsLeague", "realMadrid", "barcelona")
-      .withEvent("2", "football", "championsLeague", "legiaWarsaw", "bayernMunich");
+      .withEvent("1", "", "football", "championsLeague", "realMadrid", "barcelona")
+      .withEvent("2", "", "football", "championsLeague", "legiaWarsaw", "bayernMunich");
 
-    const state = simulator.getCurrentEventsState();
+    const state = simulator.getCurrentState();
     expect(state).toMatchObject<RawModel.SportEvent[]>([
       {
         id: "1",
