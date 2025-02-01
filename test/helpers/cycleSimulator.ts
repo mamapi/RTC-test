@@ -11,6 +11,16 @@ const DEFAULT_MAPPINGS = {
   period_4: "PERIOD_4",
 };
 
+const FOOTBALL_TEAMS = {
+  barcelona: "Barcelona",
+  realMadrid: "Real Madrid",
+  bayernMunich: "Bayern Munich",
+  parisSaintGermain: "Paris Saint-Germain",
+  liverpool: "Liverpool",
+  acMilan: "AC Milan",
+  legiaWarsaw: "Legia Warsaw",
+} as const;
+
 class CycleSimulator {
   private mappings: RawModel.MappingDict;
 
@@ -20,6 +30,15 @@ class CycleSimulator {
 
   getMappings() {
     return this.mappings;
+  }
+
+  withFootballTeam(teamKey: keyof typeof FOOTBALL_TEAMS) {
+    this.mappings = {
+      ...this.mappings,
+      football: "FOOTBALL",
+      [teamKey]: FOOTBALL_TEAMS[teamKey],
+    };
+    return this;
   }
 }
 
