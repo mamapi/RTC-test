@@ -8,6 +8,7 @@ describe("Sport Events Cycle Simulator", () => {
     expect(simulator.getMappings()).toStrictEqual({
       status_pre: "PRE",
       status_live: "LIVE",
+      status_removed: "REMOVED",
       period_current: "CURRENT",
       period_1: "PERIOD_1",
       period_2: "PERIOD_2",
@@ -198,5 +199,18 @@ describe("Sport Events Cycle Simulator", () => {
       { periodId: "period_1", homeScore: "0", awayScore: "0" },
       { periodId: "period_2", homeScore: "0", awayScore: "0" },
     ]);
+
+    // end match Real Madrid vs Barcelona
+    simulator.endMatch(eventId1);
+    state = simulator.getCurrentState();
+    expect(state[0]).toMatchObject<Partial<RawModel.SportEvent>>({
+      id: eventId1,
+      status: "status_removed",
+      scores: [
+        { periodId: "period_current", homeScore: "0", awayScore: "3" },
+        { periodId: "period_1", homeScore: "0", awayScore: "2" },
+        { periodId: "period_2", homeScore: "0", awayScore: "1" },
+      ],
+    });
   });
 });

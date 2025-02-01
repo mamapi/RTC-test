@@ -4,6 +4,7 @@ import Match from "./matchSimulator";
 const DEFAULT_MAPPINGS = {
   status_pre: "PRE",
   status_live: "LIVE",
+  status_removed: "REMOVED",
   period_current: "CURRENT",
   period_1: "PERIOD_1",
   period_2: "PERIOD_2",
@@ -62,6 +63,7 @@ const SPORTS = {
 const MATCH_STATUS_MAPPING = {
   PRE: "status_pre",
   IN: "status_live",
+  POST: "status_removed",
 } as const;
 
 class CycleSimulator {
@@ -171,6 +173,10 @@ class CycleSimulator {
 
   score(eventId: string, team: "home" | "away", points: number = 1) {
     this.matches.get(eventId)!.score(team, points);
+  }
+
+  endMatch(eventId: string) {
+    this.matches.get(eventId)!.endMatch();
   }
 
 }
