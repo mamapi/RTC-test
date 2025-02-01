@@ -63,6 +63,25 @@ describe("Sport Events Cycle Simulator", () => {
       .withEvent(eventId1, "0", "football", "championsLeague", "realMadrid", "barcelona")
       .withEvent(eventId2, "0", "football", "championsLeague", "legiaWarsaw", "bayernMunich");
 
+    // should have all needed mappings
+    expect(simulator.getMappings()).toMatchObject({
+      status_pre: "PRE",
+      status_live: "LIVE",
+      status_removed: "REMOVED",
+      period_current: "CURRENT",
+      period_1: "PERIOD_1",
+      period_2: "PERIOD_2",
+      period_3: "PERIOD_3",
+      period_4: "PERIOD_4",
+      
+      football: "FOOTBALL",
+      championsLeague: "Champions League",
+      barcelona: "Barcelona",
+      realMadrid: "Real Madrid",
+      bayernMunich: "Bayern Munich",
+      legiaWarsaw: "Legia Warsaw",
+    });
+
     // pre-match state
     let state = simulator.getCurrentState();
     expect(state).toMatchObject<RawModel.SportEvent[]>([
