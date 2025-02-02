@@ -1,6 +1,7 @@
-import { beforeAll, describe, expect, it } from "vitest";
-import CycleSimulator from "./cycleSimulator";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import CycleSimulator, { SportEventWithMatch } from "./cycleSimulator";
 import { RawModel } from "../../src/models";
+import Match from "./matchSimulator";
 
 const createFootballSimulator = () => {
   return new CycleSimulator()
@@ -43,6 +44,42 @@ describe("Sport Events Cycle Simulator", () => {
       period_2: "PERIOD_2",
       period_3: "PERIOD_3",
       period_4: "PERIOD_4",
+    });
+  });
+
+  describe("startMatch()", () => {
+    let simulator: CycleSimulator;
+    let matchIds: { elClasico: string; legiaVsBayern: string };
+    let findEventSpy: any;
+
+    beforeEach(() => {
+      simulator = createFootballSimulator();
+      matchIds = setupTestFootballMatches(simulator);
+
+      findEventSpy = vi.spyOn(simulator, "findEvent").mockImplementation((eventId) => {
+        return {
+          event: { id: eventId },
+          match: {
+            start: vi.fn(),
+          } as Partial<Match>,
+        } as SportEventWithMatch;
+      });
+    });
+
+    afterEach(() => {
+      findEventSpy.mockRestore();
+    });
+
+    it("should call match.start() for a single eventId", () => {
+      simulator.startMatch(matchIds.elClasico);
+      expect(findEventSpy).toHaveBeenCalledWith(matchIds.elClasico);
+    });
+
+    it("should call match.start() for multiple eventIds", () => {
+      simulator.startMatch([matchIds.elClasico, matchIds.legiaVsBayern]);
+
+      expect(findEventSpy).toHaveBeenCalledWith(matchIds.elClasico);
+      expect(findEventSpy).toHaveBeenCalledWith(matchIds.legiaVsBayern);
     });
   });
 

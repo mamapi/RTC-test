@@ -66,7 +66,7 @@ const MATCH_STATUS_MAPPING = {
   POST: "status_removed",
 } as const;
 
-type SportEventWithMatch = {
+export type SportEventWithMatch = {
   event: RawModel.SportEvent;
   match: Match;
 };
