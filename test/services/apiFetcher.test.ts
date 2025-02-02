@@ -37,6 +37,26 @@ describe("ApiFetcher", () => {
     expect(onTickSpy).toHaveBeenCalledTimes(expectedCalls);
   });
 
+  it("should not execute overlapping ticks if execution time is longer", async () => {
+    const onTickSpy = vi.spyOn(fetcher as any, "onTick").mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          setTimeout(resolve, 1500); // tick takes longer than interval
+        })
+    );
+
+    fetcher.start();
+
+    // simulate 3 seconds (3000 ms)
+    await vi.advanceTimersByTimeAsync(3000);
+
+    // if ticks overlapped, there should be 3 calls (3000ms / 1000ms = 3)
+    // if blocking works correctly, only 2 ticks will finish
+    expect(onTickSpy).toHaveBeenCalledTimes(2);
+
+    fetcher.stop();
+  });
+
   it("should handle API errors without crashing and continue fetching", async () => {
     const expectedErrorMessage = "API Error";
     const apiFetchStateSpy = vi.spyOn(apiClient, "fetchState").mockRejectedValue(expectedErrorMessage);
