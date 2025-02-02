@@ -7,6 +7,10 @@ abstract class AbstractFetcher {
   constructor(private readonly intervalMs: number) {}
 
   start() {
+    if (this.intervalId) {
+      return;
+    }
+
     this.intervalId = setInterval(async () => {
       if (this.isRunning) {
         Logger.warn("API fetcher is already running");
