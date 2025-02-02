@@ -66,15 +66,18 @@ const MATCH_STATUS_MAPPING = {
   POST: "status_removed",
 } as const;
 
+type SportEventWithMatch = {
+  event: RawModel.SportEvent;
+  match: Match;
+};
+
 class CycleSimulator {
   private mappings: RawModel.MappingDict;
-  private events: Map<string, RawModel.SportEvent>;
-  private matches: Map<string, Match>;
+  private eventMatchMap: Map<string, SportEventWithMatch>;
 
   constructor() {
     this.mappings = DEFAULT_MAPPINGS;
-    this.events = new Map();
-    this.matches = new Map();
+    this.eventMatchMap = new Map();
   }
 
   getMappings() {
@@ -114,25 +117,25 @@ class CycleSimulator {
       [competitionKey]: (sport.competitions as any)[competitionKey],
     };
 
-    this.events.set(eventId, {
-      id: eventId,
-      sportId: sportKey,
-      status: "status_pre",
-      startTime,
-      competitionId: competitionKey,
-      scores: [],
-      homeCompetitorId: homeKey,
-      awayCompetitorId: awayKey,
+    this.eventMatchMap.set(eventId, {
+      event: {
+        id: eventId,
+        sportId: sportKey,
+        status: "status_pre",
+        startTime,
+        competitionId: competitionKey,
+        scores: [],
+        homeCompetitorId: homeKey,
+        awayCompetitorId: awayKey,
+      },
+      match: new Match(),
     });
-
-    this.matches.set(eventId, new Match());
 
     return this;
   }
 
   getCurrentState() {
-    return Array.from(this.events.values()).map((event) => {
-      const match = this.matches.get(event.id)!;
+    return Array.from(this.eventMatchMap.values()).map(({ event, match }) => {
       const status = MATCH_STATUS_MAPPING[match.getStatus()];
 
       const scores: RawModel.PeriodScore[] = [];
@@ -190,21 +193,15 @@ class CycleSimulator {
   }
 
   removeEvent(eventId: string) {
-    this.findEvent(eventId);
-    this.events.delete(eventId);
-    this.matches.delete(eventId);
+    this.eventMatchMap.delete(eventId);
   }
 
   findEvent(eventId: string) {
-    const event = this.events.get(eventId);
+    const event = this.eventMatchMap.get(eventId);
     if (!event) {
       throw new Error(`Event with id ${eventId} not found`);
     }
-    const match = this.matches.get(eventId);
-    if (!match) {
-      throw new Error(`Match for event ${eventId} not initialized`);
-    }
-    return { event, match };
+    return event;
   }
 }
 
