@@ -5,25 +5,27 @@ import Logger from "../../src/services/logger";
 import * as parser from "../../src/services/parser";
 
 describe("ApiFetcher", () => {
+  let apiClient: ApiClient;
+  let fetcher: ApiFetcher;
+
   beforeEach(() => {
     vi.useFakeTimers();
+    apiClient = new ApiClient("http://localhost:3000");
+    fetcher = new ApiFetcher(apiClient, 1000);
   });
 
   afterEach(() => {
+    fetcher.stop();
     vi.restoreAllMocks();
   });
 
   it("should create instance with specified interval", () => {
-    const apiClient = new ApiClient("http://localhost:3000");
-    const fetcher = new ApiFetcher(apiClient, 1000);
     expect(fetcher).toBeInstanceOf(ApiFetcher);
   });
 
   it("should not execute more ticks after stop is called", async () => {
-    const apiClient = new ApiClient("http://localhost:3000");
-    const fetcher = new ApiFetcher(apiClient, 1000);
-    const onTickSpy = vi.spyOn(fetcher as any, "onTick").mockImplementation(() => Promise.resolve());
     const expectedCalls = 2;
+    const onTickSpy = vi.spyOn(fetcher as any, "onTick").mockImplementation(() => Promise.resolve());
 
     fetcher.start();
     await vi.advanceTimersByTimeAsync(1000 * expectedCalls);
@@ -36,10 +38,8 @@ describe("ApiFetcher", () => {
   });
 
   it("should handle API errors without crashing and continue fetching", async () => {
-    const apiClient = new ApiClient("http://localhost:3000");
-    const fetcher = new ApiFetcher(apiClient, 1000);
     const expectedErrorMessage = "API Error";
-    const apiFetchStateSpy = vi.spyOn(apiClient, "fetchState").mockRejectedValue(new Error(expectedErrorMessage));
+    const apiFetchStateSpy = vi.spyOn(apiClient, "fetchState").mockRejectedValue(expectedErrorMessage);
     const loggerSpy = vi.spyOn(Logger, "error").mockImplementation(() => {});
 
     fetcher.start();
@@ -56,8 +56,6 @@ describe("ApiFetcher", () => {
   });
 
   it("should handle parsing errors without crashing and continue fetching", async () => {
-    const apiClient = new ApiClient("http://localhost:3000");
-    const fetcher = new ApiFetcher(apiClient, 1000);
     const expectedErrorMessage = "Failed to parse odds data";
     const apiFetchStateSpy = vi.spyOn(apiClient, "fetchState").mockResolvedValue({ odds: "{}" });
     const apiFetchMappingsSpy = vi.spyOn(apiClient, "fetchMappings").mockResolvedValue({ mappings: "{}" });
