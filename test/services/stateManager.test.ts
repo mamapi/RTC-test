@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { updateState, geAllEvents, getActiveEvents, clearState } from "../../src/services/stateManager";
+import { updateState, getAllEvents, getActiveEvents, clearState } from "../../src/services/stateManager";
 import { RawModel } from "../../src/models";
 import CycleSimulator from "../helpers/cycleSimulator";
 
@@ -51,7 +51,7 @@ describe("StateManager", () => {
     const eventsUpdate1 = simulationFootball.getCurrentState();
 
     updateState(eventsUpdate1, mappings);
-    let state = geAllEvents();
+    let state = getAllEvents();
 
     expect(Object.keys(state).length).toEqual(eventsUpdate1.length);
     expect(state[matchRealVsBarcelonaId]).toEqual({
@@ -78,7 +78,7 @@ describe("StateManager", () => {
     const eventsUpdate2 = simulationFootball.getCurrentState();
 
     updateState(eventsUpdate2, mappings);
-    state = geAllEvents();
+    state = getAllEvents();
 
     expect(state[matchRealVsBarcelonaId].status).toEqual("LIVE");
     expect(state[matchRealVsBarcelonaId].scores).toEqual({
@@ -91,7 +91,7 @@ describe("StateManager", () => {
     const eventsUpdate3 = simulationFootball.getCurrentState();
 
     updateState(eventsUpdate3, mappings);
-    state = geAllEvents();
+    state = getAllEvents();
 
     expect(state[matchRealVsBarcelonaId].scores).toEqual({
       CURRENT: { type: "CURRENT", home: "1", away: "0" },
@@ -103,7 +103,7 @@ describe("StateManager", () => {
     const eventsUpdate4 = simulationFootball.getCurrentState();
 
     updateState(eventsUpdate4, mappings);
-    state = geAllEvents();
+    state = getAllEvents();
 
     expect(state[matchRealVsBarcelonaId].scores).toEqual({
       CURRENT: { type: "CURRENT", home: "1", away: "0" },
@@ -116,7 +116,7 @@ describe("StateManager", () => {
     const eventsUpdate5 = simulationFootball.getCurrentState();
 
     updateState(eventsUpdate5, mappings);
-    state = geAllEvents();
+    state = getAllEvents();
 
     expect(state[matchRealVsBarcelonaId].scores).toEqual({
       CURRENT: { type: "CURRENT", home: "1", away: "1" },
@@ -149,8 +149,8 @@ describe("StateManager", () => {
     expect(Object.keys(getActiveEvents())).toEqual(expectedActiveEvents);
 
     // verify ended event is still in state but marked as REMOVED
-    expect(Object.keys(geAllEvents())).toEqual([matchRealVsBarcelonaId, matchBayernVsPSGId, matchliverpoolVsMilanId]);
-    expect(geAllEvents()[matchBayernVsPSGId].status).toEqual("REMOVED");
+    expect(Object.keys(getAllEvents())).toEqual([matchRealVsBarcelonaId, matchBayernVsPSGId, matchliverpoolVsMilanId]);
+    expect(getAllEvents()[matchBayernVsPSGId].status).toEqual("REMOVED");
   });
 
   it("should clear all events when clearState is called", () => {
@@ -161,18 +161,18 @@ describe("StateManager", () => {
     simulationFootball.startMatch(matchliverpoolVsMilanId);
 
     updateState(simulationFootball.getCurrentState(), mappings);
-    expect(Object.keys(geAllEvents())).toEqual([matchRealVsBarcelonaId, matchBayernVsPSGId, matchliverpoolVsMilanId]);
+    expect(Object.keys(getAllEvents())).toEqual([matchRealVsBarcelonaId, matchBayernVsPSGId, matchliverpoolVsMilanId]);
 
     clearState();
-    expect(Object.keys(geAllEvents())).toEqual([]);
+    expect(Object.keys(getAllEvents())).toEqual([]);
   });
 
   it("should clear the state when mappings change", () => {
     updateState(simulationFootball.getCurrentState(), simulationFootball.getMappings());
-    expect(Object.keys(geAllEvents())).toEqual([matchRealVsBarcelonaId, matchBayernVsPSGId, matchliverpoolVsMilanId]);
+    expect(Object.keys(getAllEvents())).toEqual([matchRealVsBarcelonaId, matchBayernVsPSGId, matchliverpoolVsMilanId]);
 
     // switch to new mappings - should clear previous state
     updateState(simulationBasketball.getCurrentState(), simulationBasketball.getMappings());
-    expect(Object.keys(geAllEvents())).toEqual([matchChicagoVsBostonId, matchLakersVsMiamiId]);
+    expect(Object.keys(getAllEvents())).toEqual([matchChicagoVsBostonId, matchLakersVsMiamiId]);
   });
 });

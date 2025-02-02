@@ -22,7 +22,7 @@ export const clearState = () => {
   internalState = {};
 };
 
-export const geAllEvents = () => internalState;
+export const getAllEvents = () => internalState;
 
 export const getActiveEvents = () =>
   Object.fromEntries(Object.entries(internalState).filter(([_, event]) => event.status !== "REMOVED"));
