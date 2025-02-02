@@ -18,6 +18,7 @@ describe("ApiFetcher", () => {
   afterEach(() => {
     fetcher.stop();
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it("should create instance with specified interval", () => {
