@@ -8,28 +8,32 @@ abstract class AbstractFetcher {
 
   start() {
     if (this.intervalId) {
+      Logger.warn("Fetcher is already started.");
       return;
     }
 
-    this.intervalId = setInterval(async () => {
-      if (this.isRunning) {
-        Logger.warn("API fetcher is already running");
-        return;
-      }
-
-      this.isRunning = true;
-      try {
-        await this.onTick();
-      } finally {
-        this.isRunning = false;
-      }
-    }, this.intervalMs);
+    this.intervalId = setInterval(() => this.runSafely(), this.intervalMs);
   }
 
   stop() {
     if (this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = null;
+    }
+  }
+
+  private async runSafely() {
+    if (this.isRunning) {
+      Logger.warn("Fetcher is already running.");
+      return;
+    }
+
+    this.isRunning = true;
+
+    try {
+      await this.onTick();
+    } finally {
+      this.isRunning = false;
     }
   }
 
