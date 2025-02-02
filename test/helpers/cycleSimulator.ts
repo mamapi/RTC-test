@@ -68,12 +68,12 @@ const MATCH_STATUS_MAPPING = {
 
 class CycleSimulator {
   private mappings: RawModel.MappingDict;
-  private events: RawModel.SportEvent[];
+  private events: Map<string, RawModel.SportEvent>;
   private matches: Map<string, Match>;
 
   constructor() {
     this.mappings = DEFAULT_MAPPINGS;
-    this.events = [];
+    this.events = new Map();
     this.matches = new Map();
   }
 
@@ -114,7 +114,7 @@ class CycleSimulator {
       [competitionKey]: (sport.competitions as any)[competitionKey],
     };
 
-    this.events.push({
+    this.events.set(eventId, {
       id: eventId,
       sportId: sportKey,
       status: "status_pre",
@@ -131,7 +131,7 @@ class CycleSimulator {
   }
 
   getCurrentState() {
-    return this.events.map((event) => {
+    return Array.from(this.events.values()).map((event) => {
       const match = this.matches.get(event.id)!;
       const status = MATCH_STATUS_MAPPING[match.getStatus()];
 
@@ -191,12 +191,12 @@ class CycleSimulator {
 
   removeEvent(eventId: string) {
     this.findEvent(eventId);
-    this.events = this.events.filter((event) => event.id !== eventId);
+    this.events.delete(eventId);
     this.matches.delete(eventId);
   }
 
   findEvent(eventId: string) {
-    const event = this.events.find((event) => event.id === eventId);
+    const event = this.events.get(eventId);
     if (!event) {
       throw new Error(`Event with id ${eventId} not found`);
     }
