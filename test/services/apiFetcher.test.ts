@@ -10,6 +10,7 @@ describe("ApiFetcher", () => {
 
   beforeEach(() => {
     vi.useFakeTimers();
+    vi.spyOn(global, "setInterval");
     apiClient = new ApiClient("http://localhost:3000");
     fetcher = new ApiFetcher(apiClient, 1000);
   });
@@ -55,6 +56,15 @@ describe("ApiFetcher", () => {
     expect(onTickSpy).toHaveBeenCalledTimes(2);
 
     fetcher.stop();
+  });
+
+  it("should not allow multiple start calls", () => {
+    const expectedCalls = 1;
+    
+    fetcher.start();
+    fetcher.start();
+
+    expect(setInterval).toHaveBeenCalledTimes(expectedCalls);
   });
 
   it("should handle API errors without crashing and continue fetching", async () => {
