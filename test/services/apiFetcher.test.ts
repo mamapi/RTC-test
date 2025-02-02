@@ -19,18 +19,18 @@ describe("ApiFetcher", () => {
     expect(fetcher).toBeInstanceOf(ApiFetcher);
   });
 
-  it("should not execute more ticks after stop is called", () => {
+  it("should not execute more ticks after stop is called", async () => {
     const apiClient = new ApiClient("http://localhost:3000");
     const fetcher = new ApiFetcher(apiClient, 1000);
-    const onTickSpy = vi.spyOn(fetcher as any, "onTick");
+    const onTickSpy = vi.spyOn(fetcher as any, "onTick").mockImplementation(() => Promise.resolve());
     const expectedCalls = 2;
 
     fetcher.start();
-    vi.advanceTimersByTime(1000 * expectedCalls);
+    await vi.advanceTimersByTimeAsync(1000 * expectedCalls);
     expect(onTickSpy).toHaveBeenCalledTimes(expectedCalls);
 
     fetcher.stop();
-    vi.advanceTimersByTime(1000);
+    await vi.advanceTimersByTimeAsync(1000);
 
     expect(onTickSpy).toHaveBeenCalledTimes(expectedCalls);
   });
