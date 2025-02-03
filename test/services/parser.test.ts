@@ -114,8 +114,8 @@ describe("Parser", () => {
         { scenario: "null", input: null },
         { scenario: "undefined", input: undefined },
         { scenario: "whitespace only", input: " " },
-      ])("should throw error when events input is $scenario", ({ input }) => {
-        expect(() => parseEvents(input)).toThrow("Cannot parse events: Invalid events input");
+      ])("should return empty array when events input is $scenario", ({ input }) => {
+        expect(parseEvents(input)).toEqual([]);
       });
     });
   });
