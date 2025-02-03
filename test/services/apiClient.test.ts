@@ -23,7 +23,7 @@ describe("ApiClient", () => {
       const response = await apiClient.fetchState();
 
       expect(response).toEqual(mockResponse);
-      expect(fetch).toHaveBeenCalledWith(`${baseUrl}/state`);
+      expect(fetch).toHaveBeenCalledWith(`${baseUrl}/state`, { signal: expect.any(AbortSignal) });
     });
 
     it("should throw an error if the response is not ok", async () => {
@@ -49,7 +49,7 @@ describe("ApiClient", () => {
       const response = await apiClient.fetchMappings();
 
       expect(response).toEqual(mockResponse);
-      expect(fetch).toHaveBeenCalledWith(`${baseUrl}/mappings`);
+      expect(fetch).toHaveBeenCalledWith(`${baseUrl}/mappings`, { signal: expect.any(AbortSignal) });
     });
 
     it("should throw an error if the response is not ok", async () => {
