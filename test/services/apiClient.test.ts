@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import ApiClient, { StateResponse, MappingsResponse } from "../../src/services/apiClient";
+import Logger from "../../src/services/logger";
+
+vi.mock("../../src/services/logger");
 
 describe("ApiClient", () => {
   const baseUrl = "https://simulation.api.example.com";
@@ -67,7 +70,9 @@ describe("ApiClient", () => {
         return new Promise((_, reject) => {
           if (options?.signal) {
             (options.signal as AbortSignal).addEventListener("abort", () => {
-              reject(new Error("Timeout Error Message"));
+              const timeoutError = new Error("Timeout Error Message");
+              timeoutError.name = "TimeoutError";
+              reject(timeoutError);
             });
           }
         });
@@ -79,11 +84,13 @@ describe("ApiClient", () => {
     });
 
     it("should abort the fetchState request if it takes too long", async () => {
-      const slowApiClient = new ApiClient(baseUrl);
+      const timeoutMs = 10;
+      const slowApiClient = new ApiClient(baseUrl, timeoutMs);
 
       const fetchPromise = slowApiClient.fetchState();
 
       await expect(fetchPromise).rejects.toThrow("Timeout Error Message");
+      expect(Logger.error).toHaveBeenCalledWith(`Request to /state timed out after ${timeoutMs}ms`);
     });
   });
 });

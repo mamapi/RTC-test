@@ -31,7 +31,11 @@ class ApiClient {
 
       return response.json();
     } catch (error) {
-      Logger.error(`Request to ${endpoint} failed with error: ${error.message || error}`);
+      if (error instanceof Error && error.name === "TimeoutError") {
+        Logger.error(`Request to ${endpoint} timed out after ${this.timeoutMs}ms`);
+      } else {
+        Logger.error(`Request to ${endpoint} failed with error: ${error.message || error}`);
+      }
       throw error;
     }
   }
