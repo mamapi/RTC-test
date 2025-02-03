@@ -22,6 +22,7 @@ To install and run this project locally, follow these steps:
 | ---- | ------ |---------------|
 | API_PORT | A port to expose API to | 4000          |
 | SIMULATION_API_URL | A URL to the simulation API | http://localhost:3000/api          |
+| SIMULATION_API_TIMEOUT_MS | A timeout in milliseconds to fetch data from the simulation API | 1000             |
 | FETCHER_INTERVAL_MS | A interval in milliseconds to fetch data from the simulation API | 1000             |
 | LOG_LEVEL | A log level to set the logger | info             |
 
