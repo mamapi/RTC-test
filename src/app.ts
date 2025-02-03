@@ -30,7 +30,8 @@ export const init = async (config: ServerConfig = getConfig()): Promise<AppConte
   };
 
   const initFetcher = () => {
-    const apiClient = new ApiClient(config.simulationApiUrl);
+    const { simulationApiUrl, simulationApiTimeoutMs } = config;
+    const apiClient = new ApiClient(simulationApiUrl, simulationApiTimeoutMs);
     return new ApiFetcher(apiClient, config.fetcherIntervalMs);
   };
 
