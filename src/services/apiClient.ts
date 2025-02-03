@@ -1,3 +1,5 @@
+import Logger from "./logger";
+
 export interface StateResponse {
   odds: string;
 }
@@ -7,16 +9,31 @@ export interface MappingsResponse {
 }
 
 class ApiClient {
-  constructor(private baseUrl: string) {}
+  constructor(private baseUrl: string, private timeoutMs: number = 1000) {}
 
   async fetchState(): Promise<StateResponse> {
-    const response = await fetch(`${this.baseUrl}/state`);
-    return response.json();
+    return this.fetchWithTimeout<StateResponse>("/state");
   }
 
   async fetchMappings(): Promise<MappingsResponse> {
-    const response = await fetch(`${this.baseUrl}/mappings`);
-    return response.json();
+    return this.fetchWithTimeout<MappingsResponse>("/mappings");
+  }
+
+  private async fetchWithTimeout<T>(endpoint: string): Promise<T> {
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        signal: AbortSignal.timeout(this.timeoutMs),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request to ${endpoint} failed with status: ${response.status}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      Logger.error(`Request to ${endpoint} failed with error: ${error.message || error}`);
+      throw error;
+    }
   }
 }
 
