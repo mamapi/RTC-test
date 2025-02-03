@@ -18,7 +18,7 @@ class ApiFetcher extends AbstractFetcher {
       const mappings = parseMappings(mappingsResponse.mappings);
       const events = parseEvents(stateResponse.odds);
       updateState(events, mappings);
-      Logger.debug(`Updated state with ${Object.keys(events).length} events`);
+      Logger.debug(`Updated state with ${events.length} events/${Object.keys(mappings).length} mappings`);
     } catch (error) {
       Logger.error(`Error in API fetcher: ${error}`);
     }
