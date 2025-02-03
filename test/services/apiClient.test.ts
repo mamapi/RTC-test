@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import ApiClient, { StateResponse, MappingsResponse } from "../../src/services/apiClient";
 
 describe("ApiClient", () => {
@@ -58,6 +58,32 @@ describe("ApiClient", () => {
       });
 
       await expect(apiClient.fetchMappings()).rejects.toThrow();
+    });
+  });
+
+  describe("timeout handling", () => {
+    beforeEach(() => {
+      vi.spyOn(globalThis, "fetch").mockImplementation((_, options) => {
+        return new Promise((_, reject) => {
+          if (options?.signal) {
+            (options.signal as AbortSignal).addEventListener("abort", () => {
+              reject(new Error("Timeout Error Message"));
+            });
+          }
+        });
+      });
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it("should abort the fetchState request if it takes too long", async () => {
+      const slowApiClient = new ApiClient(baseUrl);
+
+      const fetchPromise = slowApiClient.fetchState();
+
+      await expect(fetchPromise).rejects.toThrow("Timeout Error Message");
     });
   });
 });
