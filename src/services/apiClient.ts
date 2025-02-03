@@ -1,5 +1,7 @@
 import Logger from "./logger";
 
+const DEFAULT_TIMEOUT_MS = 1000;
+
 export interface StateResponse {
   odds: string;
 }
@@ -9,7 +11,7 @@ export interface MappingsResponse {
 }
 
 class ApiClient {
-  constructor(private baseUrl: string, private timeoutMs: number = 1000) {}
+  constructor(private baseUrl: string, private timeoutMs: number = DEFAULT_TIMEOUT_MS) {}
 
   async fetchState(): Promise<StateResponse> {
     return this.fetchWithTimeout<StateResponse>("/state");
